@@ -2,10 +2,12 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '../theme';
+import MainAppShell from '@/components/MainShell/MainAppShell';
+import { AuthProvider } from './authentication/client-auth-provider';
 
 export const metadata = {
-  title: 'Mantine Next.js template',
-  description: 'I am using Mantine with Next.js!',
+  title: 'Alpha Seekers',
+  description: 'Seeking Alphas and Personal Projects :)',
 };
 
 export default function RootLayout({ children }: { children: any }) {
@@ -20,7 +22,11 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme}>
+          <AuthProvider>
+            <MainAppShell>{children}</MainAppShell>
+          </AuthProvider>
+        </MantineProvider>
       </body>
     </html>
   );

@@ -40,14 +40,14 @@ const data = [
   },
 ];
 
-interface CardProps {
+interface PaperCardProps {
   image: string;
   title: string;
   category: string;
   link: string;
 }
 
-function Card({ image, title, category, link }: CardProps) {
+function PaperCard({ image, title, category, link }: PaperCardProps) {
   return (
     <Paper
       shadow="md"
@@ -83,7 +83,7 @@ export const Images: React.FC = () => {
   const autoplay = useRef(Autoplay({ delay: 15000 }));
   const slides = data.map((img) => (
     <Carousel.Slide key={img.title}>
-      <Card {...img} />
+      <PaperCard {...img} />
     </Carousel.Slide>
   ));
 

@@ -1,11 +1,6 @@
-import { SecondToDate, formatNumbers } from "../UtilECharts";
+import { SecondToDate, formatNumbers } from '../UtilECharts';
 
-export const transformArray = (
-  chartData,
-  strikePrice,
-  expDateStr,
-  columnvalue,
-) => {
+export const transformArray = (chartData, strikePrice, expDateStr, columnvalue) => {
   const result = [];
 
   for (const element of chartData) {
@@ -42,9 +37,7 @@ function makeGrid(unique, chartHeight) {
 export const EChartTime_Opts = (chartData) => {
   // get unique dates
 
-  const uni = [...new Set(chartData.map((e) => e.exp_date_str))]
-    .sort((a, b) => a - b)
-    .reverse();
+  const uni = [...new Set(chartData.map((e) => e.exp_date_str))].sort((a, b) => a - b).reverse();
   // sort X-axis data so that it will plot in order.
 
   const sortedData = chartData.sort((a, b) => a.strike_price - b.strike_price);
@@ -53,20 +46,20 @@ export const EChartTime_Opts = (chartData) => {
   const chartHeight = `${uni.length * 300}px`;
   const gridLayout = makeGrid(uni, chartHeight);
   const xArrayMapped = [
-    "strike_price",
-    "c_notion_expo",
-    "p_notion_expo",
-    "total_notional_exposure",
+    'strike_price',
+    'c_notion_expo',
+    'p_notion_expo',
+    'total_notional_exposure',
   ];
   const option = {
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     tooltip: {
-      trigger: "axis",
-      backgroundColor: "transparent",
+      trigger: 'axis',
+      backgroundColor: 'transparent',
       hideDelay: 1500,
       confine: true,
       axisPointer: {
-        type: "cross",
+        type: 'cross',
       },
     },
     legend: {},
@@ -78,17 +71,17 @@ export const EChartTime_Opts = (chartData) => {
     grid: gridLayout,
   };
 
-  const colors = ["#e01f54", "#0098d9", "#001852"];
+  const colors = ['#e01f54', '#0098d9', '#001852'];
 
   for (let i = 0; i < uni.length; i++) {
     option.dataset.push({
       dimensions: xArrayMapped,
-      source: filterArray(sortedData, "exp_date_str", uni[i]),
+      source: filterArray(sortedData, 'exp_date_str', uni[i]),
     });
     for (let j = 0; j < 3; j++) {
       option.series.push({
-        type: "bar",
-        barGap: "-100%",
+        type: 'bar',
+        barGap: '-100%',
         datasetIndex: i,
         color: colors[j],
         barWidth: 5,
@@ -97,14 +90,14 @@ export const EChartTime_Opts = (chartData) => {
       });
     }
     option.xAxis.push({
-      type: "category",
+      type: 'category',
       gridIndex: i,
     });
     option.yAxis.push({
-      type: "value",
+      type: 'value',
       gridIndex: i,
       name: SecondToDate(uni[i]),
-      nameTextStyle: { fontWeight: "bold" },
+      nameTextStyle: { fontWeight: 'bold' },
       axisLabel: {
         formatter: function (value) {
           return formatNumbers(value);

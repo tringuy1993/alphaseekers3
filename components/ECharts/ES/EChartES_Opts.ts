@@ -1,39 +1,34 @@
-import { formatNumbers, datasets, commonOptions } from "../UtilECharts";
+import { formatNumbers, datasets, commonOptions } from '../UtilECharts';
 
 export function EChartES_Opts(symbol, chartData) {
   // Setting dimensions and get 'dataset' for Echarts
-  const SGdimensions = [
-    "strike",
-    "c_notion_expo",
-    "p_notion_expo",
-    "total_notional_exposure",
-  ];
+  const SGdimensions = ['strike', 'c_notion_expo', 'p_notion_expo', 'total_notional_exposure'];
   const dataset = datasets(chartData, [], SGdimensions, []);
-  const legends = ["$Call", "$Put", "$Total"];
-  const colors = ["#e01f54", "#0098d9", "#001852", "#e6b600"];
+  const legends = ['$Call', '$Put', '$Total'];
+  const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   let series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       itemStyle: { color: colors[0] },
       name: legends[0],
     },
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       itemStyle: { color: colors[1] },
       name: legends[1],
     },
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       itemStyle: { color: colors[2] },
       name: legends[2],
     },
@@ -49,7 +44,7 @@ export function EChartES_Opts(symbol, chartData) {
     title: [
       {
         text: `${symbol} Sum: ${SumTotalGEX}`,
-        left: "center",
+        left: 'center',
         textStyle: { fontSize: 30 },
       },
     ],
@@ -60,20 +55,20 @@ export function EChartES_Opts(symbol, chartData) {
     xAxis: [
       {
         xAxisIndex: 0,
-        type: "category",
+        type: 'category',
         axisLabel: {
-          frontWeight: "bold",
+          frontWeight: 'bold',
         },
       },
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         axisLabel: {
           formatter: function (value) {
             return formatNumbers(value);
           },
-          fontWeight: "bold",
+          fontWeight: 'bold',
           rotate: 90,
         },
         max: function (value) {
@@ -92,35 +87,35 @@ export function EChartES_Opts(symbol, chartData) {
 export const ECOpts_ES_VolOI = (symbol, chartData) => {
   // Setting dimensions and get 'dataset' for Echarts
   const dimensions = [
-    "strike",
-    "c_openinterest",
-    "p_openinterest",
-    "c_totalvolume",
-    "p_totalvolume",
+    'strike',
+    'c_openinterest',
+    'p_openinterest',
+    'c_totalvolume',
+    'p_totalvolume',
   ];
   const dataset = datasets(chartData, [], dimensions, []);
 
-  const patterns = ["none", "none", "rect", "rect"];
-  const legends = ["COI", "POI", "CVolume", "PVolume"];
+  const patterns = ['none', 'none', 'rect', 'rect'];
+  const legends = ['COI', 'POI', 'CVolume', 'PVolume'];
   // const colors = ["#Ff0d00", "#0066ff", "#Ff3400", "#0052ff"];
-  const colors = ["#e01f54", "#0098d9", "#e01f54", "#0098d9"];
+  const colors = ['#e01f54', '#0098d9', '#e01f54', '#0098d9'];
 
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   let series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       name: legends[0],
       itemStyle: { color: colors[0] },
     },
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
-      color: "blue",
+      type: 'bar',
+      barGap: '-100%',
+      color: 'blue',
       name: legends[1],
       itemStyle: { color: colors[1] },
     },
@@ -128,8 +123,8 @@ export const ECOpts_ES_VolOI = (symbol, chartData) => {
       datasetIndex: 0,
       xAxisIndex: 1,
       yAxisIndex: 1,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       // color: "red",
       name: legends[2],
       itemStyle: {
@@ -141,8 +136,8 @@ export const ECOpts_ES_VolOI = (symbol, chartData) => {
       datasetIndex: 0,
       xAxisIndex: 1,
       yAxisIndex: 1,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       // color: "blue",
       name: legends[3],
       itemStyle: {
@@ -156,12 +151,12 @@ export const ECOpts_ES_VolOI = (symbol, chartData) => {
   const option = {
     ...commonOptions,
     grid: [
-      { left: 30, right: 20, bottom: "45%" },
-      { left: 30, right: 20, top: "60%", bottom: "5%" },
+      { left: 30, right: 20, bottom: '45%' },
+      { left: 30, right: 20, top: '60%', bottom: '5%' },
     ],
     dataZoom: {
-      id: "dataZoomX",
-      type: "slider",
+      id: 'dataZoomX',
+      type: 'slider',
       xAxisIndex: [0, 1],
     },
     dataset: dataset,
@@ -169,29 +164,29 @@ export const ECOpts_ES_VolOI = (symbol, chartData) => {
     xAxis: [
       {
         // xAxisIndex: 0,
-        type: "category",
+        type: 'category',
         axisLabel: {
-          frontWeight: "bold",
+          frontWeight: 'bold',
         },
       },
       {
         gridIndex: 1,
         // xAxisIndex: 1,
-        type: "category",
+        type: 'category',
         axisLabel: {
-          frontWeight: "bold",
+          frontWeight: 'bold',
         },
         show: false,
       },
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         axisLabel: {
           formatter: function (value) {
             return formatNumbers(value);
           },
-          fontWeight: "bold",
+          fontWeight: 'bold',
           rotate: 90,
         },
         max: function (value) {
@@ -204,12 +199,12 @@ export const ECOpts_ES_VolOI = (symbol, chartData) => {
       {
         gridIndex: 1,
         // yAxisIndex: 1,
-        type: "value",
+        type: 'value',
         axisLabel: {
           formatter: function (value) {
             return formatNumbers(value);
           },
-          fontWeight: "bold",
+          fontWeight: 'bold',
           rotate: 90,
         },
         max: function (value) {
@@ -219,7 +214,7 @@ export const ECOpts_ES_VolOI = (symbol, chartData) => {
           return value.min;
         },
         splitLine: {
-          lineStyle: { type: "dashed" },
+          lineStyle: { type: 'dashed' },
         },
       },
     ],

@@ -1,7 +1,7 @@
-import { GetAllModifiedToSData, GetModifiedToSData } from "./DataEChart";
+import { GetAllModifiedToSData, GetModifiedToSData } from './DataEChart';
 
 export function modify_data(data, greek) {
-  const modified_data = data?.map((data) => GetModifiedToSData(data, greek));
+  const modified_data = data?.map((item) => GetModifiedToSData(item, greek));
   // Need index in data
   for (let i = 0; i < modified_data?.length; i++) {
     modified_data[i].index = i;
@@ -15,12 +15,12 @@ export function modify_data(data, greek) {
 }
 
 export function modify_time_data(data, greek) {
-  if (data[0].hasOwnProperty("c_notion_expo")) {
+  if (data[0].hasOwnProperty('c_notion_expo')) {
     // Need index in data
 
     return { modified_data: data, nonzero_data: data };
   }
-  const modified_data = data?.map((data) => GetAllModifiedToSData(data, greek));
+  const modified_data = data?.map((item) => GetAllModifiedToSData(item, greek));
   // Need index in data
   for (let i = 0; i < modified_data.length; i++) {
     modified_data[i].index = i;
@@ -51,7 +51,7 @@ export const create_series = (
   type,
   legend,
   color,
-  showSymbol,
+  showSymbol
 ) => {
   return {
     xAxisIndex: xAxisIndex,
@@ -72,7 +72,7 @@ export const createMarkLine = (
   data,
   colorLine,
   colorBackground,
-  position,
+  position
 ) => {
   return {
     markLine: {
@@ -89,7 +89,7 @@ export const createMarkLine = (
           label: {
             padding: 5,
             borderRadius: 5,
-            color: "white",
+            color: 'white',
             position: position,
             formatter: function (param) {
               return param.name;
@@ -109,7 +109,7 @@ export const createMarkLineGEX = (
   data,
   colorLine,
   colorBackground,
-  position,
+  position
 ) => {
   return {
     markLine: {
@@ -126,7 +126,7 @@ export const createMarkLineGEX = (
           label: {
             padding: 5,
             borderRadius: 5,
-            color: "white",
+            color: 'white',
             position: position,
             formatter: function (param) {
               return param.name;
@@ -139,13 +139,7 @@ export const createMarkLineGEX = (
   };
 };
 
-export const createXMarkLineData = (
-  axis,
-  data,
-  colorLine,
-  colorBackground,
-  position,
-) => {
+export const createXMarkLineData = (axis, data, colorLine, colorBackground, position) => {
   return {
     [`${axis}Axis`]: data?.index,
     name: `${data?.price_name?.toFixed(1)}`,
@@ -156,7 +150,7 @@ export const createXMarkLineData = (
     label: {
       padding: 5,
       borderRadius: 5,
-      color: "white",
+      color: 'white',
       position: position,
       formatter: function (param) {
         return param.name;
@@ -173,8 +167,8 @@ export const markValue = (value, current_data) => {
   };
 };
 
-export const convertToKeyArray = (array) => {
-  return array.reduce((acc, curr) => {
+export const convertToKeyArray = (array) =>
+  array.reduce((acc, curr) => {
     Object.keys(curr).forEach((key) => {
       if (!acc[key]) {
         acc[key] = [];
@@ -183,16 +177,15 @@ export const convertToKeyArray = (array) => {
     });
     return acc;
   }, {});
-};
 
 export const commonOptions = {
   tooltip: {
-    trigger: "axis",
-    backgroundColor: "transparent",
+    trigger: 'axis',
+    backgroundColor: 'transparent',
     hideDelay: 1500,
     confine: true,
     axisPointer: {
-      type: "line",
+      type: 'line',
       snap: true,
     },
     valueFormatter: function (value) {
@@ -200,15 +193,15 @@ export const commonOptions = {
     },
     position: function (pos, params, el, elRect, size) {
       var obj = { top: 10 };
-      obj[["left", "right"][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+      obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
       return obj;
     },
   },
   axisPointer: {
-    link: { xAxisIndex: "all" },
-    label: { backgroundColor: "#777" },
+    link: { xAxisIndex: 'all' },
+    label: { backgroundColor: '#777' },
   },
-  backgroundColor: "transparent",
+  backgroundColor: 'transparent',
   legend: { left: 50, bottom: 65 },
   toolbox: {
     feature: {
@@ -217,20 +210,20 @@ export const commonOptions = {
         xAxisIndex: [0, 1],
       },
       brush: {
-        type: ["lineX", "clear"],
+        type: ['lineX', 'clear'],
       },
     },
   },
-  animationEasing: "elasticOut",
+  animationEasing: 'elasticOut',
 };
 
 export function formatNumbers(value) {
   if (value >= 1000000000 || value <= -1000000000) {
-    return parseFloat(value / 1e9).toFixed(1) + "B";
+    return parseFloat(value / 1e9).toFixed(1) + 'B';
   } else if (value >= 1000000 || value <= -1000000) {
-    return parseFloat(value / 1e6).toFixed(1) + "M";
+    return parseFloat(value / 1e6).toFixed(1) + 'M';
   } else if (value >= 10000 || value <= -10000) {
-    return parseFloat(value / 1e3).toFixed(1) + "K";
+    return parseFloat(value / 1e3).toFixed(1) + 'K';
   } else if (value >= 1000 || value <= -1000) {
     return parseFloat(value).toFixed(1);
   }
@@ -243,18 +236,14 @@ export function SecondToDate(msTime) {
 }
 
 export function tradeHour() {
-  const moment = require("moment-timezone");
+  const moment = require('moment-timezone');
   const nowtime = new Date();
   const now = nowtime.toISOString();
   const is_Weekday = nowtime.getDay() % 6 !== 0;
   if (is_Weekday) {
-    const openTime = moment(now)
-      .tz("America/New_York")
-      .set({ hour: 9, minute: 0 });
-    const closeTime = moment(now)
-      .tz("America/New_York")
-      .set({ hour: 16, minute: 10 });
-    const currentTime = moment(now).tz("America/New_York");
+    const openTime = moment(now).tz('America/New_York').set({ hour: 9, minute: 0 });
+    const closeTime = moment(now).tz('America/New_York').set({ hour: 16, minute: 10 });
+    const currentTime = moment(now).tz('America/New_York');
 
     return currentTime.isBetween(openTime, closeTime);
   } else {
@@ -268,7 +257,7 @@ export function filterByProperty(data, propertyName, extractProperty, range) {
     (obj) =>
       obj.hasOwnProperty(propertyName) &&
       obj[propertyName] >= range.min &&
-      obj[propertyName] <= range.max,
+      obj[propertyName] <= range.max
   );
 
   const test = [
@@ -291,7 +280,7 @@ export function getMinMax(data, propertyName) {
       }
       return acc;
     },
-    { min: Number.MAX_VALUE, max: Number.MIN_VALUE },
+    { min: Number.MAX_VALUE, max: Number.MIN_VALUE }
   );
 }
 
@@ -305,8 +294,8 @@ export function filterArray(chartData, key, value) {
 
 export function findClosestIndex(arr, value) {
   return arr.reduce((closestIndex, current, index) => {
-    let currentDiff = Math.abs(current.strike_price - value);
-    let closestDiff = Math.abs(arr[closestIndex].strike_price - value);
+    const currentDiff = Math.abs(current.strike_price - value);
+    const closestDiff = Math.abs(arr[closestIndex].strike_price - value);
     return currentDiff < closestDiff ? index : closestIndex;
   }, 0);
 }

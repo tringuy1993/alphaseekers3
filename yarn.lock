@@ -2880,6 +2880,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantine/dates@npm:^7.4.2":
+  version: 7.4.2
+  resolution: "@mantine/dates@npm:7.4.2"
+  dependencies:
+    clsx: "npm:2.0.0"
+  peerDependencies:
+    "@mantine/core": 7.4.2
+    "@mantine/hooks": 7.4.2
+    dayjs: ">=1.0.0"
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: 0592489d8fb45737269b79167d456b35b2a88ee7239d1a7afdddc01c0d42b2f70e4a1e07ee6241aa734e22c8f44787b8c3687fb5030ee1f1875537bcdbc823c0
+  languageName: node
+  linkType: hard
+
 "@mantine/form@npm:^7.4.1":
   version: 7.4.1
   resolution: "@mantine/form@npm:7.4.1"
@@ -7905,6 +7920,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"date-fns@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "date-fns@npm:3.2.0"
+  checksum: f93e987f785d7f2b7349986d150b014ce21fa6425e2e1edea6f0e01731dceef68deabf0f723689c28604e857648ac708a52b924cb7584e4321835686aa665371
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.10":
+  version: 1.11.10
+  resolution: "dayjs@npm:1.11.10"
+  checksum: 4de9af50639d47df87f2e15fa36bb07e0f9ed1e9c52c6caa1482788ee9a384d668f1dbd00c54f82aaab163db07d61d2899384b8254da3a9184fc6deca080e2fe
+  languageName: node
+  linkType: hard
+
 "debug@npm:2.6.9, debug@npm:^2.6.9":
   version: 2.6.9
   resolution: "debug@npm:2.6.9"
@@ -12144,6 +12173,7 @@ __metadata:
     "@babel/core": "npm:^7.23.2"
     "@mantine/carousel": "npm:^7.4.1"
     "@mantine/core": "npm:7.4.0"
+    "@mantine/dates": "npm:^7.4.2"
     "@mantine/form": "npm:^7.4.1"
     "@mantine/hooks": "npm:^7.4.1"
     "@next/bundle-analyzer": "npm:^14.0.1"
@@ -12165,6 +12195,8 @@ __metadata:
     "@typescript-eslint/parser": "npm:^6.9.1"
     axios: "npm:^1.6.5"
     babel-loader: "npm:^9.1.3"
+    date-fns: "npm:^3.2.0"
+    dayjs: "npm:^1.11.10"
     echarts: "npm:^5.4.3"
     echarts-for-react: "npm:^3.0.2"
     embla-carousel-autoplay: "npm:^7.1.0"

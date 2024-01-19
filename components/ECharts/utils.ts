@@ -1,7 +1,7 @@
-import { format } from "date-fns";
+import { format } from 'date-fns';
 
 export function formatDate(dateobj: Date): string {
-  return format(dateobj, "yyyy-MM-dd");
+  return format(dateobj, 'yyyy-MM-dd');
 }
 
 export type requestParamsProps = {
@@ -11,17 +11,11 @@ export type requestParamsProps = {
   endDate: string;
 };
 
-export function request_data_params({
-  und_symbol,
-  greek,
-  startDate,
-  endDate,
-}): requestParamsProps {
-  und_symbol =
-    typeof und_symbol === "object" ? JSON.stringify(und_symbol) : und_symbol;
+export function request_data_params({ und_symbol, greek, startDate, endDate }): requestParamsProps {
+  const new_symbol = typeof und_symbol === 'object' ? JSON.stringify(und_symbol) : und_symbol;
   return {
-    und_symbol: und_symbol,
-    greek: greek,
+    und_symbol: new_symbol,
+    greek,
     startDate: formatDate(startDate),
     endDate: formatDate(endDate),
   };

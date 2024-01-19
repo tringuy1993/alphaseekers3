@@ -1,6 +1,9 @@
-import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+
 import { theme } from '../theme';
 import MainAppShell from '@/components/MainShell/MainAppShell';
 import { AuthProvider } from './authentication/client-auth-provider';

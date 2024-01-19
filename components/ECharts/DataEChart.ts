@@ -25,37 +25,32 @@ type ESOptionResult = {
   // p_openinterest?: number;
 };
 
-export function combineESOptionData(
-  data: ESOptionData[],
-  greek: string
-): ESOptionResult[] {
+export function combineESOptionData(data: ESOptionData[], greek: string): ESOptionResult[] {
   let combined_data: ESOptionResult[];
-  if (data.some((obj) => "exp_date" in obj)) {
-
+  if (data.some((obj) => 'exp_date' in obj)) {
     const call_data = data
-      .filter((data) => data.optiontype === "c")
+      .filter((data) => data.optiontype === 'c')
       .map((data) => ({
         strike: data.strike,
         exp_date_str: data.exp_date,
         c_totalvolume: data.volume,
         c_openinterest: data.openinterest,
-        c_notion_expo: data[greek + "_notion_expo"],
+        c_notion_expo: data[greek + '_notion_expo'],
       }));
 
     const put_data = data
-      .filter((data) => data.optiontype === "p")
+      .filter((data) => data.optiontype === 'p')
       .map((data) => ({
         strike: data.strike,
         exp_date_str: data.exp_date,
         p_totalvolume: -1 * data.volume,
         p_openinterest: -1 * data.openinterest,
-        p_notion_expo: data[greek + "_notion_expo"],
+        p_notion_expo: data[greek + '_notion_expo'],
       }));
 
     combined_data = call_data.reduce((acc: ESOptionResult[], curr) => {
       const matching_put_data = put_data.find(
-        (data) =>
-          data.strike === curr.strike && data.exp_date_str === curr.exp_date_str
+        (data) => data.strike === curr.strike && data.exp_date_str === curr.exp_date_str
       );
       if (matching_put_data) {
         // console.log(acc);
@@ -68,35 +63,32 @@ export function combineESOptionData(
           p_totalvolume: matching_put_data.p_totalvolume,
           p_openinterest: matching_put_data.p_openinterest,
           p_notion_expo: matching_put_data.p_notion_expo,
-          total_notional_exposure:
-            curr.c_notion_expo + matching_put_data.p_notion_expo,
+          total_notional_exposure: curr.c_notion_expo + matching_put_data.p_notion_expo,
         });
       }
       return acc;
     }, []);
   } else {
     const call_data = data
-      .filter((data) => data.optiontype === "c")
+      .filter((data) => data.optiontype === 'c')
       .map((data) => ({
         strike: data.strike,
         c_totalvolume: data.volume,
         c_openinterest: data.openinterest,
-        c_notion_expo: data[greek + "_notion_expo"],
+        c_notion_expo: data[greek + '_notion_expo'],
       }));
 
     const put_data = data
-      .filter((data) => data.optiontype === "p")
+      .filter((data) => data.optiontype === 'p')
       .map((data) => ({
         strike: data.strike,
         p_totalvolume: -1 * data.volume,
         p_openinterest: -1 * data.openinterest,
-        p_notion_expo: data[greek + "_notion_expo"],
+        p_notion_expo: data[greek + '_notion_expo'],
       }));
 
     combined_data = call_data.reduce((acc: ESOptionResult[], curr) => {
-      const matching_put_data = put_data.find(
-        (data) => data.strike === curr.strike
-      );
+      const matching_put_data = put_data.find((data) => data.strike === curr.strike);
       if (matching_put_data) {
         acc.push({
           strike: curr.strike,
@@ -106,8 +98,7 @@ export function combineESOptionData(
           p_totalvolume: matching_put_data.p_totalvolume,
           p_openinterest: matching_put_data.p_openinterest,
           p_notion_expo: matching_put_data.p_notion_expo,
-          total_notional_exposure:
-            curr.c_notion_expo + matching_put_data.p_notion_expo,
+          total_notional_exposure: curr.c_notion_expo + matching_put_data.p_notion_expo,
         });
       }
       return acc;
@@ -124,9 +115,9 @@ export const GetAllModifiedToSData = (data, greek: string): ESOptionResult => {
     open_price: data.open_price,
     c_totalvolume: data.c_totalvolume,
     p_totalvolume: -1 * data.p_totalvolume,
-    total_notional_exposure: data[greek + "_total_notional_exposure"],
-    c_notion_expo: data["c_" + greek + "_notion_expo"],
-    p_notion_expo: data["p_" + greek + "_notion_expo"],
+    total_notional_exposure: data[greek + '_total_notional_exposure'],
+    c_notion_expo: data['c_' + greek + '_notion_expo'],
+    p_notion_expo: data['p_' + greek + '_notion_expo'],
   };
 };
 
@@ -142,9 +133,9 @@ export const GetModifiedToSData = (data, greek: string): ESOptionResult => {
     p_totalvolume: -1 * data.p_totalvolume,
     p_openinterest: -1 * data.p_openinterest,
 
-    total_notional_exposure: data[greek + "_total_notional_exposure"],
-    c_notion_expo: data["c_" + greek + "_notion_expo"],
-    p_notion_expo: data["p_" + greek + "_notion_expo"],
+    total_notional_exposure: data[greek + '_total_notional_exposure'],
+    c_notion_expo: data['c_' + greek + '_notion_expo'],
+    p_notion_expo: data['p_' + greek + '_notion_expo'],
   };
 };
 

@@ -1,25 +1,18 @@
 'use client';
 
-// import { DateRangePicker } from "@/components/daterangepicker/date-range-picker";
-// import { getNextDate } from "@/components/daterangepicker/utils";
-// import { SelectGreek } from "@/components/selection/selection-greek";
 import { useState } from 'react';
 import { format } from 'date-fns';
-// import { SelectTicker } from "@/components/selection/selection-ticker";
-import { getNextDate } from '@/components/DatePicker/utils';
+import { Box, Group, Switch } from '@mantine/core';
 
-import MyComponent, { DateRange } from '@/components/DatePicker/DatePicker2';
+import { getNextDate } from '@/components/DatePicker/utils';
 import SelectWrapper from '@/components/SelectWrapper';
 import EChartToSALL from '@/components/ECharts/ToS/EChartToS_ALL';
 import EChartES from '@/components/ECharts/ES/EChartES';
-import { Box, Group, Switch } from '@mantine/core';
+
 import { ToS_Theo_Chart } from './ToS_Theo_Chart';
-import DatePickerWrapper from '@/components/DatePicker/DatePicker2';
+import DatePickerWrapper from '@/components/DatePicker/DatePickerWrapper';
 
-const formatDate = (dateobj: Date): string => {
-  return format(dateobj, 'yyyy-MM-dd');
-};
-
+const formatDate = (dateobj: Date): string => format(dateobj, 'yyyy-MM-dd');
 const GREEKMENU = [
   { label: 'Gamma', value: 'gamma' },
   { label: 'Vanna', value: 'vanna' },
@@ -42,7 +35,6 @@ export default function PageGreekTime() {
   ]);
 
   const handleDateChange = (values) => {
-    console.log(values);
     setDateRange(values);
   };
   //Select Greeks
@@ -55,25 +47,23 @@ export default function PageGreekTime() {
   const theoStatus = isTheoGreek ? 'Theo' : 'NonTheo';
   //Select Ticker
 
-  const [ticker, setTicker] = useState('$SPX.X');
-
   const tickers = ['$SPX.X', 'SPY', 'QQQ', '$NDX.X', '$RUT.X'];
   const tosParams = {
     und_symbol: tickers,
-    greek: greek,
+    greek,
     startDate: dateRange[0],
     endDate: dateRange[1],
   };
 
   const esParams = {
     und_symbol: 'ES',
-    greek: greek,
+    greek,
     startDate: formatDate(dateRange[0] as Date),
     endDate: formatDate(dateRange[1] as Date),
   };
 
   const theoParams = {
-    greek: greek,
+    greek,
     startDate: formatDate(dateRange[0] as Date),
     endDate: formatDate(dateRange[1] as Date),
   };

@@ -1,0 +1,62 @@
+.overlayStyle {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.55;
+  /* Add a blur filter if desired */
+  filter: blur(20px);
+}
+
+.musicPlayer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* height: 100vh; */
+}
+
+.roundedImage {
+  width: 450px;
+  overflow: hidden;
+  border-radius: 9999px;
+  box-shadow: 0 2px 10px;
+}
+
+.scrollGenre {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scrollSongs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hiddenMenu {
+  display: none;
+  @media (max-width: $mantine-breakpoint-md) {
+    display: inline;
+  }
+}
+
+/* ModalStyles.css */
+.mantine-Modal-overlay {
+  background-color: transparent !important; /* Make overlay transparent */
+}
+
+.mantine-Modal-content {
+  background: transparent !important; /* Make modal content background transparent */
+  box-shadow: none !important; /* Optional: remove box shadow if desired */
+}
+
+.songCard {
+  text-align: center;
+}
+
+.genreCard {
+  width: 120px;
+  text-align: center;
+  justify-content: center;
+}

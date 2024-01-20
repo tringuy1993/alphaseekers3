@@ -19,12 +19,12 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
 
   // Getting close and open price from chartData (GEX Data)
   const closestLastIndex2 = {
-    price_name: chartData[0]['last_price'],
-    index: findClosestIndex(chartData, chartData[0]['last_price']),
+    price_name: chartData[0].last_price,
+    index: findClosestIndex(chartData, chartData[0].last_price),
   };
   const closestOpenIndex2 = {
-    price_name: chartData[0]['open_price'],
-    index: findClosestIndex(chartData, chartData[0]['open_price']),
+    price_name: chartData[0].open_price,
+    index: findClosestIndex(chartData, chartData[0].open_price),
   };
 
   const patterns = ['none', 'none', 'rect', 'rect'];
@@ -80,7 +80,7 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
   ];
 
   // Adding last_price and open_price to OpenInterest Data
-  series[0]['markLine'] = {
+  series[0].markLine = {
     symbol: ['none', 'none'],
     silent: false,
     data: [
@@ -90,7 +90,7 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
   };
 
   // Adding last_price and open_price to Volume Data
-  series[2]['markLine'] = {
+  series[2].markLine = {
     symbol: ['none', 'none'],
     silent: false,
     data: [
@@ -100,8 +100,8 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
   };
 
   // Remove Volume Data Label:
-  series[2]['markLine']['data'][0]['label']['show'] = false;
-  series[2]['markLine']['data'][1]['label']['show'] = false;
+  series[2].markLine.data[0].label.show = false;
+  series[2].markLine.data[1].label.show = false;
 
   // Creating Option for the chart.
   const option = {

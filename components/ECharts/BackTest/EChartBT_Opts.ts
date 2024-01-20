@@ -4,7 +4,7 @@ import {
   commonOptions,
   findClosestIndex,
   createXMarkLineData,
-} from "../UtilECharts";
+} from '../UtilECharts';
 
 function findClosestIndexBT(list, target) {
   return list.reduce(
@@ -12,25 +12,25 @@ function findClosestIndexBT(list, target) {
       const diff = Math.abs(curr.strike - target);
       return diff < min.diff ? { index, diff } : min;
     },
-    { index: -1, diff: Infinity },
+    { index: -1, diff: Infinity }
   ).index;
 }
 export function ECOpts_Theo_BT(chartData, greek) {
   // Setting dimensions and get 'dataset' for Echarts
-  const SGdimensions = ["spot_price", `theo_gamma`];
+  const SGdimensions = ['spot_price', `theo_gamma`];
   const dataset = {
     dimensions: SGdimensions,
     source: chartData,
   };
-  const legends = ["$Call", "$Put"];
-  const colors = ["#e01f54", "#0098d9"];
+  const legends = ['$Call', '$Put'];
+  const colors = ['#e01f54', '#0098d9'];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
-  let series = [
+  const series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "line",
-      barGap: "-100%",
+      type: 'line',
+      barGap: '-100%',
       itemStyle: { color: colors[0] },
       name: legends[0],
     },
@@ -42,7 +42,7 @@ export function ECOpts_Theo_BT(chartData, greek) {
     title: [
       {
         // text: ` ${greek} Sum: ${SumTotalGEX}`,
-        left: "center",
+        left: 'center',
         textStyle: { fontSize: 30 },
       },
     ],
@@ -57,20 +57,20 @@ export function ECOpts_Theo_BT(chartData, greek) {
     xAxis: [
       {
         xAxisIndex: 0,
-        type: "category",
+        type: 'category',
         axisLabel: {
-          frontWeight: "bold",
+          frontWeight: 'bold',
         },
       },
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         axisLabel: {
           formatter: function (value) {
             return formatNumbers(value);
           },
-          fontWeight: "bold",
+          fontWeight: 'bold',
           rotate: 90,
         },
         max: function (value) {
@@ -89,7 +89,7 @@ export function ECOpts_Theo_BT(chartData, greek) {
 export function ECOpts_BT(chartData, greek) {
   // Setting dimensions and get 'dataset' for Echarts
   const SGdimensions = [
-    "strike",
+    'strike',
     `c_${greek}_notion_expo`,
     `p_${greek}_notion_expo`,
     `total_${greek}_notion_expo`,
@@ -99,66 +99,58 @@ export function ECOpts_BT(chartData, greek) {
     dimensions: SGdimensions,
     source: chartData,
   };
-  const legends = ["$Call", "$Put", "$Total"];
-  const colors = ["#e01f54", "#0098d9", "#001852", "#e6b600"];
+  const legends = ['$Call', '$Put', '$Total'];
+  const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
 
   const closestCurrentIndex = {
-    price_name: chartData[0]["active_underlying_price"],
-    index: findClosestIndexBT(
-      chartData,
-      chartData[0]["active_underlying_price"],
-    ),
+    price_name: chartData[0].active_underlying_price,
+    index: findClosestIndexBT(chartData, chartData[0].active_underlying_price),
   };
 
   let series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       itemStyle: { color: colors[0] },
       name: legends[0],
     },
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       itemStyle: { color: colors[1] },
       name: legends[1],
     },
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       itemStyle: { color: colors[2] },
       name: legends[2],
     },
   ];
 
   // Adding Line to xAxis Index on Call
-  series[0]["markLine"] = {
-    symbol: ["none"],
+  series[0].markLine = {
+    symbol: ['none'],
     silent: false,
-    data: [
-      createXMarkLineData("x", closestCurrentIndex, "green", "green", "start"),
-    ],
+    data: [createXMarkLineData('x', closestCurrentIndex, 'green', 'green', 'start')],
   };
 
   // Creating Option for the chart.
   const SumTotalGEX = formatNumbers(
-    chartData.reduce(
-      (acc, option) => acc + option[`total_${greek}_notion_expo`],
-      0,
-    ),
+    chartData.reduce((acc, option) => acc + option[`total_${greek}_notion_expo`], 0)
   );
   const option = {
     title: [
       {
         text: ` ${greek} Sum: ${SumTotalGEX}`,
-        left: "center",
+        left: 'center',
         textStyle: { fontSize: 30 },
       },
     ],
@@ -169,20 +161,20 @@ export function ECOpts_BT(chartData, greek) {
     xAxis: [
       {
         xAxisIndex: 0,
-        type: "category",
+        type: 'category',
         axisLabel: {
-          frontWeight: "bold",
+          frontWeight: 'bold',
         },
       },
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         axisLabel: {
           formatter: function (value) {
             return formatNumbers(value);
           },
-          fontWeight: "bold",
+          fontWeight: 'bold',
           rotate: 90,
         },
         max: function (value) {
@@ -201,35 +193,35 @@ export function ECOpts_BT(chartData, greek) {
 export const ECOpts_BT_VolOI = (chartData) => {
   // Setting dimensions and get 'dataset' for Echarts
   const dimensions = [
-    "strike",
-    "c_openinterest",
-    "p_openinterest",
-    "c_totalvolume",
-    "p_totalvolume",
+    'strike',
+    'c_openinterest',
+    'p_openinterest',
+    'c_totalvolume',
+    'p_totalvolume',
   ];
   const dataset = datasets(chartData, [], dimensions, []);
 
-  const patterns = ["none", "none", "rect", "rect"];
-  const legends = ["COI", "POI", "CVolume", "PVolume"];
+  const patterns = ['none', 'none', 'rect', 'rect'];
+  const legends = ['COI', 'POI', 'CVolume', 'PVolume'];
   // const colors = ["#Ff0d00", "#0066ff", "#Ff3400", "#0052ff"];
-  const colors = ["#e01f54", "#0098d9", "#e01f54", "#0098d9"];
+  const colors = ['#e01f54', '#0098d9', '#e01f54', '#0098d9'];
 
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   let series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       name: legends[0],
       itemStyle: { color: colors[0] },
     },
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      type: "bar",
-      barGap: "-100%",
-      color: "blue",
+      type: 'bar',
+      barGap: '-100%',
+      color: 'blue',
       name: legends[1],
       itemStyle: { color: colors[1] },
     },
@@ -237,8 +229,8 @@ export const ECOpts_BT_VolOI = (chartData) => {
       datasetIndex: 0,
       xAxisIndex: 1,
       yAxisIndex: 1,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       // color: "red",
       name: legends[2],
       itemStyle: {
@@ -250,8 +242,8 @@ export const ECOpts_BT_VolOI = (chartData) => {
       datasetIndex: 0,
       xAxisIndex: 1,
       yAxisIndex: 1,
-      type: "bar",
-      barGap: "-100%",
+      type: 'bar',
+      barGap: '-100%',
       // color: "blue",
       name: legends[3],
       itemStyle: {
@@ -265,12 +257,12 @@ export const ECOpts_BT_VolOI = (chartData) => {
   const option = {
     ...commonOptions,
     grid: [
-      { left: 30, right: 20, bottom: "45%" },
-      { left: 30, right: 20, top: "60%", bottom: "5%" },
+      { left: 30, right: 20, bottom: '45%' },
+      { left: 30, right: 20, top: '60%', bottom: '5%' },
     ],
     dataZoom: {
-      id: "dataZoomX",
-      type: "slider",
+      id: 'dataZoomX',
+      type: 'slider',
       xAxisIndex: [0, 1],
     },
     dataset: dataset,
@@ -278,29 +270,29 @@ export const ECOpts_BT_VolOI = (chartData) => {
     xAxis: [
       {
         // xAxisIndex: 0,
-        type: "category",
+        type: 'category',
         axisLabel: {
-          frontWeight: "bold",
+          frontWeight: 'bold',
         },
       },
       {
         gridIndex: 1,
         // xAxisIndex: 1,
-        type: "category",
+        type: 'category',
         axisLabel: {
-          frontWeight: "bold",
+          frontWeight: 'bold',
         },
         show: false,
       },
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         axisLabel: {
           formatter: function (value) {
             return formatNumbers(value);
           },
-          fontWeight: "bold",
+          fontWeight: 'bold',
           rotate: 90,
         },
         max: function (value) {
@@ -313,12 +305,12 @@ export const ECOpts_BT_VolOI = (chartData) => {
       {
         gridIndex: 1,
         // yAxisIndex: 1,
-        type: "value",
+        type: 'value',
         axisLabel: {
           formatter: function (value) {
             return formatNumbers(value);
           },
-          fontWeight: "bold",
+          fontWeight: 'bold',
           rotate: 90,
         },
         max: function (value) {
@@ -328,7 +320,7 @@ export const ECOpts_BT_VolOI = (chartData) => {
           return value.min;
         },
         splitLine: {
-          lineStyle: { type: "dashed" },
+          lineStyle: { type: 'dashed' },
         },
       },
     ],

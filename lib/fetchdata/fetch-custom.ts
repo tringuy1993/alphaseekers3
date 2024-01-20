@@ -25,7 +25,7 @@ const axiosFetcher = async (url, params = {}, options = {}) => {
 };
 
 function useCustomSWR(url, params = {}, swrOptions = {}) {
-  const { data, error, ...rest } = useSWR(
+  const { data, error, isLoading, ...rest } = useSWR(
     [url, params],
     () => axiosFetcher(url, params, swrOptions),
     swrOptions
@@ -33,7 +33,7 @@ function useCustomSWR(url, params = {}, swrOptions = {}) {
 
   return {
     data,
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     ...rest,
   };

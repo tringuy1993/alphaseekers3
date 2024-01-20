@@ -1,0 +1,7 @@
+.customCard {
+  cursor: pointer;
+}
+
+.customCard:hover {
+  background-color: red; /* Replace with the hex value of Mantine's secondary color */
+}

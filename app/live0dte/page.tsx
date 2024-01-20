@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { SelectUticker } from './selectUTicker';
 import EChart0DTE from '@/components/ECharts/Live0DTE/EChart0DTE';
 import { SelectUDate } from './selectDate';
-import CardWrapper from '@/components/CardWrapper';
+import CustomCard from '@/components/CustomCard/CustomCard';
 
 export default function PageLive0DTE() {
   const [uTicker, setUTicker] = useState('$SPX.X');
@@ -23,9 +23,9 @@ export default function PageLive0DTE() {
         <SelectUDate uTicker={uTicker} onDefaultDateChange={handleUTickerChange} />
       </header>
 
-      <CardWrapper>
+      <CustomCard>
         <EChart0DTE params={chartParams} />
-      </CardWrapper>
+      </CustomCard>
     </div>
   );
 }

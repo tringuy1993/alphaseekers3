@@ -1,5 +1,5 @@
-import { ECOpts_BT } from "./EChartBT_Opts";
-import { EChartThemed } from "../EChartThemed";
+import { ECOpts_BT } from './EChartBT_Opts';
+import { EChartThemed } from '../EChartThemed';
 
 const EChartBT = ({ data, greek }) => {
   let ecOptions;
@@ -8,7 +8,7 @@ const EChartBT = ({ data, greek }) => {
   }
   return (
     <>
-      <EChartThemed option={{ ...ecOptions }} style={{ height: "650px" }} />
+      <EChartThemed option={{ ...ecOptions }} style={{ height: '650px' }} />
     </>
   );
 };

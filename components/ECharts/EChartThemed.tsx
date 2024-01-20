@@ -1,6 +1,6 @@
 import { useMantineColorScheme } from '@mantine/core';
-import ReactEcharts from 'echarts-for-react';
-import { EChartsOption } from 'echarts-for-react';
+
+import ReactEcharts, { EChartsOption } from 'echarts-for-react';
 
 type EChartThemedProps = {
   option: EChartsOption;

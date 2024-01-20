@@ -7,11 +7,11 @@ export function modify_data(data, greek) {
     modified_data[i].index = i;
   }
 
-  const nonzero_data = modified_data?.filter(function (obj) {
+  const nonzero_data = modified_data?.filter((obj) => {
     return obj.c_notion_expo !== 0 && obj.p_notion_expo !== 0;
   });
 
-  return { modified_data: modified_data, nonzero_data: nonzero_data };
+  return { modified_data, nonzero_data };
 }
 
 export function modify_time_data(data, greek) {
@@ -54,13 +54,13 @@ export const create_series = (
   showSymbol
 ) => {
   return {
-    xAxisIndex: xAxisIndex,
-    yAxisIndex: yAxisIndex,
+    xAxisIndex,
+    yAxisIndex,
     lineStyle: { type: lineStyle },
-    type: type,
+    type,
     name: legend,
     itemStyle: { color: color },
-    showSymbol: showSymbol,
+    showSymbol,
     // smooth: true,
   };
 };

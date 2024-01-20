@@ -32,7 +32,7 @@ export const EChartToS_Opts = (symbol, chartData, theoData) => {
   const legends = ['$Call', '$Put', '$Total', '$TheoGamma'];
   const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
-  let series = [
+  const series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
@@ -60,7 +60,7 @@ export const EChartToS_Opts = (symbol, chartData, theoData) => {
   ];
 
   // Adding line to xAxisIndex for Call
-  series[0]['markLine'] = {
+  series[0].markLine = {
     symbol: ['none', 'none'],
     silent: false,
     data: [
@@ -84,8 +84,8 @@ export const EChartToS_Opts = (symbol, chartData, theoData) => {
     ],
     ...commonOptions,
     grid: [{ left: 30, right: 30, bottom: 30 }],
-    dataset: dataset,
-    series: series,
+    dataset,
+    series,
     xAxis: [
       {
         xAxisIndex: 0,

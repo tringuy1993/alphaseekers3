@@ -20,10 +20,15 @@ export default function MainAppShell({ children }: { children: React.ReactNode }
   const pathWithSideNavBar = authorizedLinks.includes(currentPath);
 
   const pinned = useHeadroom({ fixedAt: 120 });
+  const headerHeight = 60;
+  const isMusicPage = currentPath === siteLinks.music.href;
+  const musicStyle = isMusicPage
+    ? { display: 'flex', flexDirection: 'column', justifyContent: 'center' } // Note the correction in the property name from 'flexDirect' to 'flexDirection'
+    : {};
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: `${headerHeight}` }}
       navbar={
         pathWithSideNavBar
           ? { width: '80px', breakpoint: 'sm', collapsed: { mobile: !opened } }
@@ -36,16 +41,11 @@ export default function MainAppShell({ children }: { children: React.ReactNode }
       </AppShell.Header>
       {pathWithSideNavBar && (
         <AppShell.Navbar>
-          {/* {Array(15)
-            .fill(0)
-            .map((_, index) => (
-              <Skeleton key={index} h={28} mt="sm" animate={false} />
-            ))} */}
           <SideBar />
         </AppShell.Navbar>
       )}
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main style={musicStyle}>{children}</AppShell.Main>
     </AppShell>
   );
 }

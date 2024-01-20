@@ -28,9 +28,15 @@ export function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
   const commonLinks = componentLinks.map((links) => (
-    <Link href={links.href} className={classes.link} key={links.href}>
+    <Button
+      variant="subtle"
+      component={Link}
+      href={links.href}
+      className={classes.link}
+      key={links.href}
+    >
       {links.title}
-    </Link>
+    </Button>
   ));
 
   return (

@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
+
 import { LIVE_OTM_DATES } from '@/lib/fetchdata/apiURLs';
 import useCustomSWR from '@/lib/fetchdata/fetch-custom';
 import MainLoading from '../loading';
-import { useEffect, useState } from 'react';
 import SelectWrapper from '@/components/SelectWrapper';
 import { uDateType } from './types';
 
@@ -58,19 +59,19 @@ function isLatestDateEqualToToday(dateList: uDateType[]) {
   );
 
   // Get the latest date
-  let latestDate = dateList[0].saved_date;
+  const latestDate = dateList[0].saved_date;
 
   // Get today's date formatted as YYYY-MM-DD
-  let today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toISOString().slice(0, 10);
 
-  let now = new Date();
-  let isAfterTwoThirty =
+  const now = new Date();
+  const isAfterTwoThirty =
     now.getUTCHours() > 14 || (now.getUTCHours() === 14 && now.getUTCMinutes() > 30);
 
   // Compare and return the appropriate date
   if (latestDate === today && isAfterTwoThirty) {
     return { is0DTE: true, date: today };
-  } else {
-    return { is0DTE: false, date: latestDate };
   }
+
+  return { is0DTE: false, date: latestDate };
 }

@@ -1,5 +1,5 @@
-import EChartToS_Theo_Comp from '@/components/ECharts/ToS/EChartToS_Theo';
 import { Card } from '@mantine/core';
+import EChartToS_Theo_Comp from '@/components/ECharts/ToS/EChartToS_Theo';
 
 export const ToS_Theo_Chart = ({ params }) => {
   const tickers = ['$SPX.X', '$VIX.X', '$NDX.X', 'SPY'];
@@ -13,9 +13,5 @@ export const ToS_Theo_Chart = ({ params }) => {
     );
   });
 
-  return (
-    <div className="mx-2.5 grid gap-4 screen-1200px:grid-cols-2 screen-1200px:mx-28">
-      {TheoCharts}
-    </div>
-  );
+  return <>{TheoCharts}</>;
 };

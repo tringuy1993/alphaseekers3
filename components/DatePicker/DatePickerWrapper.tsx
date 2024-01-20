@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { DatePicker } from '@mantine/dates';
-import { Box, Button, CheckIcon, Container, Flex, Group, Popover } from '@mantine/core';
+import { Button, CheckIcon, Container, Flex, Group, Popover } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { getNextDate } from './utils';
+import { formatDate, getNextDate } from './utils';
 
 interface Preset {
   name: string;
@@ -43,9 +43,28 @@ const DatePickerWrapper = ({
 
   const form = useForm<{ dateRange: DateRange }>({
     initialValues: {
-      dateRange: dateRange,
+      dateRange,
     },
   });
+
+  const togglePopover = () => {
+    setIsPopoverOpen(!isPopoverOpen);
+  };
+
+  // Final Cancellation
+  const handleClosePopover = () => {
+    // Reset the date to the last confirmed date
+    setDateRange(lastConfirmedDate);
+    form.setFieldValue('dateRange', lastConfirmedDate);
+    setIsPopoverOpen(false);
+  };
+
+  // Or Final Submission of new Date
+  const handleSubmit = (values: { dateRange: DateRange }) => {
+    setLastConfirmedDate(values.dateRange);
+    onUpdate(values.dateRange);
+    setIsPopoverOpen(false);
+  };
 
   const setPreset = (preset: string): void => {
     const presetRange = getPresetRange(preset);
@@ -81,7 +100,7 @@ const DatePickerWrapper = ({
 
   const displayDateRange = () => {
     if (!dateRange[0] || !dateRange[1]) return 'Select date range';
-    return `${formatPrintDate(dateRange[0])} - ${formatPrintDate(dateRange[1])}`;
+    return `${formatDate(dateRange[0])} - ${formatDate(dateRange[1])}`;
   };
 
   const handleDateChange = (newDateRange: DateRange) => {
@@ -106,25 +125,6 @@ const DatePickerWrapper = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  const togglePopover = () => {
-    setIsPopoverOpen(!isPopoverOpen);
-  };
-
-  // Final Cancellation
-  const handleClosePopover = () => {
-    // Reset the date to the last confirmed date
-    setDateRange(lastConfirmedDate);
-    form.setFieldValue('dateRange', lastConfirmedDate);
-    setIsPopoverOpen(false);
-  };
-
-  // Or Final Submission of new Date
-  const handleSubmit = (values: { dateRange: DateRange }) => {
-    setLastConfirmedDate(values.dateRange);
-    onUpdate(values.dateRange);
-    setIsPopoverOpen(false);
-  };
 
   return (
     <Popover
@@ -178,21 +178,13 @@ const DatePickerWrapper = ({
 
 export default DatePickerWrapper;
 
-const formatPrintDate = (date: Date) => {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // months are 0-indexed
-  const day = date.getDate().toString().padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-};
-
 const getPresetRange = (presetName: string): DateRange => {
   const preset = PRESETS.find(({ name }) => name === presetName);
   if (!preset) throw new Error(`Unknown date range preset: ${presetName}`);
   const from = new Date();
   const to = new Date();
-  const first = from.getDate() - from.getDay();
-  const thisSaturday = getNextDate({ targetDayName: 'Saturday' });
+  // const first = from.getDate() - from.getDay();
+  // const thisSaturday = getNextDate({ targetDayName: 'Saturday' });
   const dayOfWeek = from.getDay(); // Sunday - 0, Monday - 1, etc.
   const dayOfToWeek = to.getDay();
 
@@ -206,12 +198,12 @@ const getPresetRange = (presetName: string): DateRange => {
       from.setHours(0, 0, 0, 0); // Set the time to the start of the day
 
       // Clone 'from' date to avoid modifying it when setting 'to'
-      const endOfWeek = new Date(from.getTime());
+      const endOfThisWeek = new Date(from.getTime());
 
       // Set 'to' to the next Sunday (end of the current week)
-      endOfWeek.setDate(from.getDate() + 7); // Add 7 days to get to the next Sunday
-      endOfWeek.setHours(23, 59, 59, 999); // Set time to the end of the day
-      to.setDate(endOfWeek.getDate());
+      endOfThisWeek.setDate(from.getDate() + 7); // Add 7 days to get to the next Sunday
+      endOfThisWeek.setHours(23, 59, 59, 999); // Set time to the end of the day
+      to.setDate(endOfThisWeek.getDate());
       break;
     case 'nextWeek':
       from.setDate(from.getDate() - dayOfWeek + 7); // Go back to the last Sunday

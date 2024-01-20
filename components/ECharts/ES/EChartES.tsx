@@ -1,15 +1,14 @@
 'use client';
 
 import React from 'react';
+import { Grid } from '@mantine/core';
 import { combineESOptionData } from '../DataEChart';
 import { ECOpts_ES_VolOI, EChartES_Opts } from './EChartES_Opts';
-// import { EChartThemed } from "../EChartThemed";
+
 import useCustomSWR from '@/lib/fetchdata/fetch-custom';
 import { ES_URL } from '@/lib/fetchdata/apiURLs';
-// import { Card } from '@/components/ui/card';
 import { EChartThemed } from '../EChartThemed';
 import MainLoading from '@/app/loading';
-import { Grid } from '@mantine/core';
 
 const EChartES = ({ params }) => {
   const { greek, und_symbol: symbol } = params;

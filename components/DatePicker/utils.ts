@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 interface DateMapObject {
   date: string;
   dateNumber: number;
@@ -17,6 +19,7 @@ const DATEMAP: DateMapObject[] = [
   { date: 'Saturday', dateNumber: 6 },
 ];
 
+export const formatDate = (dateobj: Date): string => format(dateobj, 'yyyy-MM-dd');
 export function getNextDate({
   currentDate = new Date(),
   targetDayName = 'Friday',

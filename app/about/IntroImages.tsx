@@ -47,7 +47,7 @@ interface PaperCardProps {
   link: string;
 }
 
-function PaperCard({ image, title, category, link }: PaperCardProps) {
+function PaperCard({ image, title, link }: PaperCardProps) {
   return (
     <Paper
       shadow="md"
@@ -56,23 +56,7 @@ function PaperCard({ image, title, category, link }: PaperCardProps) {
       style={{ backgroundImage: `url(${image})` }}
       className={classes.card}
     >
-      {/* <div>
-        <Text className={classes.category} size="xs">
-          {category}
-        </Text>
-        <Title order={3} className={classes.title}>
-          {title}
-        </Title>
-      </div> */}
-
-      <Button
-        // variant="white"
-        color="dark"
-        className={classes.category}
-        component="a"
-        target="_blank"
-        href={link}
-      >
+      <Button color="dark" className={classes.category} component="a" target="_blank" href={link}>
         {title}
       </Button>
     </Paper>

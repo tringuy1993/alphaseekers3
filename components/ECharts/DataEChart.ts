@@ -20,9 +20,6 @@ type ESOptionResult = {
   p_openinterest?: number;
   p_notion_expo: number;
   total_notional_exposure: number;
-
-  // c_openinterest?: number;
-  // p_openinterest?: number;
 };
 
 export function combineESOptionData(data: ESOptionData[], greek: string): ESOptionResult[] {
@@ -121,24 +118,21 @@ export const GetAllModifiedToSData = (data, greek: string): ESOptionResult => {
   };
 };
 
-export const GetModifiedToSData = (data, greek: string): ESOptionResult => {
-  return {
-    strike_price: data.strike_price,
-    last_price: data.last_price,
-    open_price: data.open_price,
+export const GetModifiedToSData = (data, greek: string): ESOptionResult => ({
+  strike_price: data.strike_price,
+  last_price: data.last_price,
+  open_price: data.open_price,
 
-    c_totalvolume: data.c_totalvolume,
-    c_openinterest: data.c_openinterest,
+  c_totalvolume: data.c_totalvolume,
+  c_openinterest: data.c_openinterest,
 
-    p_totalvolume: -1 * data.p_totalvolume,
-    p_openinterest: -1 * data.p_openinterest,
+  p_totalvolume: -1 * data.p_totalvolume,
+  p_openinterest: -1 * data.p_openinterest,
 
-    total_notional_exposure: data[greek + '_total_notional_exposure'],
-    c_notion_expo: data['c_' + greek + '_notion_expo'],
-    p_notion_expo: data['p_' + greek + '_notion_expo'],
-  };
-};
-
+  total_notional_exposure: data[greek + '_total_notional_exposure'],
+  c_notion_expo: data['c_' + greek + '_notion_expo'],
+  p_notion_expo: data['p_' + greek + '_notion_expo'],
+});
 export type TheoDataProps = {
   strike_price?: number;
   spot_price?: number;

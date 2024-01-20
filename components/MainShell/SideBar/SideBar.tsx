@@ -21,17 +21,17 @@ interface NavbarLinkProps {
 
 function NavbarLink({ icon: Icon, label, href, active, onClick }: NavbarLinkProps) {
   return (
-    <Link href={href} className={classes.mainLink}>
-      <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-        <UnstyledButton
-          onClick={onClick}
-          className={classes.link}
-          data-active={active || undefined}
-        >
-          <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
-        </UnstyledButton>
-      </Tooltip>
-    </Link>
+    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+      <UnstyledButton
+        component={Link}
+        href={href}
+        onClick={onClick}
+        className={classes.link}
+        data-active={active || undefined}
+      >
+        <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
+      </UnstyledButton>
+    </Tooltip>
   );
 }
 

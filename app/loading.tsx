@@ -1,7 +1,18 @@
 'use client';
 
-import { Loader } from '@mantine/core';
+import { Container, Loader } from '@mantine/core';
 
 export default function MainLoading() {
-  return <Loader size={50} type="dots" />;
+  return (
+    <Container
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Loader size={50} type="dots" />
+    </Container>
+  );
 }

@@ -10,22 +10,21 @@ import {
 } from '@tabler/icons-react';
 import { siteLinks } from '@/config/site';
 import classes from './SideBar.module.css';
+import { usePathname } from 'next/navigation';
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
   href: string;
   label: string;
   active?: boolean;
-  onClick?(): void;
 }
 
-function NavbarLink({ icon: Icon, label, href, active, onClick }: NavbarLinkProps) {
+function NavbarLink({ icon: Icon, label, href, active }: NavbarLinkProps) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <UnstyledButton
         component={Link}
         href={href}
-        onClick={onClick}
         className={classes.link}
         data-active={active || undefined}
       >
@@ -43,28 +42,22 @@ const mockdata = [
     label: siteLinks.backtest.title,
     href: siteLinks.backtest.href,
   },
-  { icon: IconCalendarStats, label: 'Releases', href: '' },
 ];
 
 export function SideBar() {
-  const [active, setActive] = useState(0);
+  const currentPath = usePathname();
+
+  const activeIndex = mockdata.findIndex((item) => item.href === currentPath);
 
   const links = mockdata.map((link, index) => (
-    <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === active}
-      onClick={() => setActive(index)}
-    />
+    <NavbarLink {...link} key={link.label} active={index === activeIndex} />
   ));
 
   return (
     <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
-        <Stack justify="center" gap={0}>
-          {links}
-        </Stack>
-      </div>
+      <Stack justify="center" gap={0}>
+        {links}
+      </Stack>
     </nav>
   );
 }

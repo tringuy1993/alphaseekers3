@@ -95,9 +95,19 @@ export default function PageMusic() {
         >
           <IconPlaylist />
         </ActionIcon>
-        <Modal size="xl" opened={opened} onClose={close}>
-          <GenreGrid {...{ handleUpdateGenreClick, handleSelectedSongClick, genre, classes }} />
-        </Modal>
+        <Modal.Root size="xl" opened={opened} onClose={close}>
+          <Modal.Overlay />
+          <Modal.Content style={{ background: 'transparent', backdropFilter: 'blur(10px)' }}>
+            <Modal.Header>
+              <Modal.Title></Modal.Title>
+              <Modal.CloseButton />
+            </Modal.Header>
+
+            <Modal.Body>
+              <GenreGrid {...{ handleUpdateGenreClick, handleSelectedSongClick, genre, classes }} />
+            </Modal.Body>
+          </Modal.Content>
+        </Modal.Root>
       </SimpleGrid>
     </Container>
   );

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { SecondToDate, formatNumbers } from '../UtilECharts';
 
 export const transformArray = (chartData, strikePrice, expDateStr, columnvalue) => {

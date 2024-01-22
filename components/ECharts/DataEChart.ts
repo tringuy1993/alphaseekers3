@@ -1,3 +1,4 @@
+/* eslint-disable */
 type ESOptionData = {
   openinterest: number;
   optiontype: string | number;

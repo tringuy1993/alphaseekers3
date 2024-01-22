@@ -1,30 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { GREEK_EXPO_URL } from '@/lib/fetchdata/apiURLs';
 import useCustomSWR from '@/lib/fetchdata/fetch-custom';
 import { request_data_params } from '../utils';
 import { TheoDataProps } from '../DataEChart';
 import EChartToS from './EChartToS';
-
-function convertToPST(timestampStr) {
-  // Create a JavaScript Date object from the input string
-  const timestamp = new Date(timestampStr);
-
-  // Get the UTC offset for PST (Pacific Standard Time) in minutes
-  const pstOffsetMinutes = -480; // PST is UTC-8
-
-  // Calculate the PST timestamp by applying the UTC offset
-  const pstTimestamp = new Date(timestamp.getTime() + pstOffsetMinutes * 60000);
-
-  // Format the PST timestamp as a string with 'PST' at the end
-  const pstTimeStr = pstTimestamp
-    .toISOString()
-    .replace('T', ' ')
-    .replace(/\.\d{3}Z$/, ' PST');
-
-  return pstTimeStr;
-}
 
 // Get Chart Data List
 function getChartDataList(data: Record<string, any> | undefined, tosTheoData_SPX: TheoDataProps) {

@@ -3,19 +3,14 @@
 import { usePathname } from 'next/navigation';
 import { AppShell, Burger, Button, Divider, Group } from '@mantine/core';
 import { useDisclosure, useHeadroom } from '@mantine/hooks';
-import { siteConfig, siteLinks } from '@/config/site';
-import { SideBar } from './SideBar/SideBar';
 import Link from 'next/link';
+import { authorizedLinksList, siteConfig, siteLinks } from '@/config/site';
+import { SideBar } from './SideBar/SideBar';
+
 import { ThemeToggle } from '../Theme/ThemeToggle';
 import { UserMenu } from '../Users/UserMenu';
 import { Icons } from '../icons';
 import classes from './MainAppShell.module.css';
-
-const authorizedLinks = [
-  siteLinks.optionsdata.href,
-  siteLinks.optionstime.href,
-  siteLinks.backtest.href,
-];
 
 const componentLinks: { title: string; href: string }[] = [
   {
@@ -39,7 +34,7 @@ const commonLinks = componentLinks.map((links) => (
 export default function MainAppShell({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
   const currentPath = usePathname();
-  const pathWithSideNavBar = authorizedLinks.includes(currentPath);
+  const pathWithSideNavBar = authorizedLinksList.includes(currentPath);
 
   const pinned = useHeadroom({ fixedAt: 120 });
   const isMusicPage = currentPath === siteLinks.music.href;

@@ -8,10 +8,10 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { AuthContext, type SignInCredential, type Tenant } from './context';
 import { Auth } from './firebase';
-import { siteLinks } from '@/config/site';
+import { authorizedLinksList, siteLinks } from '@/config/site';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -68,6 +68,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const handleSignOut = async (): Promise<void> => {
     signOut(Auth);
     localStorage.removeItem('tenant');
+    const params = searchParams.get('redirect');
+    const redirectLink = params === null ? siteLinks.optionsdata.href : params;
+    router.push(redirectLink as string);
     router.refresh();
   };
   const handleAuthStateChanged = async (firebaseUser: FirebaseUser | null) => {
@@ -98,5 +101,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     errAuth,
   };
 
-  return <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>;
+  const pathName = usePathname();
+
+  useEffect(() => {
+    if (!isAuthLoading && !tenant && authorizedLinksList.includes(pathName)) {
+      redirect(`${siteLinks.signin.href}?redirect=${pathName}`);
+    }
+  }, [pathName, handleSignOut]);
+
+  return (
+    <AuthContext.Provider value={contextData}>{!isAuthLoading && children}</AuthContext.Provider>
+  );
 };

@@ -43,7 +43,7 @@ const data = [
 interface PaperCardProps {
   image: string;
   title: string;
-  category: string;
+  // category: string;
   link: string;
 }
 

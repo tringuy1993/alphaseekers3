@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable */
+
 import { Controls, PlaybackState, PlayerState, Playlist, TrackMetadata } from './types';
 
 export function createAudioplayer(

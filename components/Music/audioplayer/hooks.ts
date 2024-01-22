@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { useState, useRef, useEffect } from 'react';
 import { Controls, InitialPlayerState, PlayerState, Playlist } from './types';
 import { createAudioplayer } from './audioplayer';

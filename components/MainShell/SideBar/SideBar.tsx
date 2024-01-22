@@ -1,16 +1,10 @@
-import { useState } from 'react';
 import { Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-import {
-  IconHome2,
-  IconGauge,
-  IconDeviceDesktopAnalytics,
-  IconCalendarStats,
-} from '@tabler/icons-react';
+import { IconHome2, IconGauge, IconDeviceDesktopAnalytics } from '@tabler/icons-react';
 import { siteLinks } from '@/config/site';
 import classes from './SideBar.module.css';
-import { usePathname } from 'next/navigation';
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;

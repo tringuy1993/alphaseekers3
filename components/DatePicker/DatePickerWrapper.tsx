@@ -37,7 +37,7 @@ const DatePickerWrapper = ({
   onUpdate,
 }: DatePickerWrapperProps) => {
   const [dateRange, setDateRange] = useState<DateRange>(initialDateRange); // Selected Date Range within the component for state management
-  const [lastConfirmedDate, setLastConfirmedDate] = useState<DateRange>([null, null]); // Final Confirmed Date Selection
+  const [lastConfirmedDate, setLastConfirmedDate] = useState<DateRange>(initialDateRange); // Final Confirmed Date Selection
   const [selectedPreset, setSelectedPreset] = useState<string | undefined>(undefined); // Preset Selection
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false); // State to control Popover visibility
 
@@ -126,6 +126,7 @@ const DatePickerWrapper = ({
     };
   }, []);
 
+  const [defaultMonth, setDefaultMonth] = useState(initialDateRange[0]);
   return (
     <Popover
       opened={isPopoverOpen}
@@ -155,6 +156,8 @@ const DatePickerWrapper = ({
                 onChange={handleDateChange}
                 allowSingleDateInRange
                 firstDayOfWeek={0}
+                // defaultValue={dateRange}
+                defaultDate={dateRange[0] as Date}
               />
 
               <Group justify="flex-end" gap="sm">

@@ -1,3 +1,5 @@
+/* eslint-disable react/self-closing-comp */
+/* eslint-disable react/jsx-closing-tag-location */
 type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {

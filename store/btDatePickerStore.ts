@@ -1,9 +1,6 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-interface DateRange {
-  from: Date;
-  to: Date | undefined;
-}
+type DateRange = [Date, Date | undefined];
 
 type State = {
   BackTestDate: DateRange;
@@ -14,6 +11,6 @@ type Action = {
 };
 
 export const useBTDatePickerStore = create<State & Action>((set) => ({
-  BackTestDate: { from: new Date("2018-06-05"), to: new Date("2018-06-05") },
+  BackTestDate: [new Date('2018-06-05'), new Date('2018-06-05')],
   updateBackTestDate: (dateRange) => set({ BackTestDate: dateRange }),
 }));

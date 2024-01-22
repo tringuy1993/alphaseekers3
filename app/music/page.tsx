@@ -30,18 +30,38 @@ const INITIAL = {
   artist: 'Ellie Goulding',
 };
 
+const GenreGrid = ({ handleUpdateGenreClick, handleSelectedSongClick, genre, classes }) => (
+  <Grid>
+    <Grid.Col span={4}>
+      <Title>Genre</Title>
+      <ScrollArea h={550} w={150}>
+        <Box className={classes.scrollGenre}>
+          <GenreButtons handleUpdateGenreClick={handleUpdateGenreClick} />
+        </Box>
+      </ScrollArea>
+    </Grid.Col>
+    <Grid.Col span={8}>
+      <Title>{genre.genre + ` Songs`} </Title>
+      <ScrollArea h={550}>
+        <Box className={classes.scrollSongs}>
+          <GenreSongs genre={genre} handleSelectedSongClick={handleSelectedSongClick} />
+        </Box>
+      </ScrollArea>
+    </Grid.Col>
+  </Grid>
+);
+
 export default function PageMusic() {
   const [genre, setGenre] = useState<genreType>({ genre: '2010-2014' });
   const [selectedSong, setSelectedSong] = useState<SongData>(INITIAL);
-  const [visible, setVisible] = useState(true);
   const [opened, { open, close }] = useDisclosure(false);
   const handleSelectedSongClick = useCallback((songObj: SongData) => {
     const { song, index, artist, genre } = songObj;
     setSelectedSong({
       title: song,
       song_number: index,
-      artist: artist,
-      genre: genre,
+      artist,
+      genre,
     });
   }, []);
 
@@ -112,24 +132,3 @@ export default function PageMusic() {
     </Container>
   );
 }
-
-const GenreGrid = ({ handleUpdateGenreClick, handleSelectedSongClick, genre, classes }) => (
-  <Grid>
-    <Grid.Col span={4}>
-      <Title>Genre</Title>
-      <ScrollArea h={550} w={150}>
-        <Box className={classes.scrollGenre}>
-          <GenreButtons handleUpdateGenreClick={handleUpdateGenreClick} />
-        </Box>
-      </ScrollArea>
-    </Grid.Col>
-    <Grid.Col span={8}>
-      <Title>{genre.genre + ` Songs`} </Title>
-      <ScrollArea h={550}>
-        <Box className={classes.scrollSongs}>
-          <GenreSongs genre={genre} handleSelectedSongClick={handleSelectedSongClick} />
-        </Box>
-      </ScrollArea>
-    </Grid.Col>
-  </Grid>
-);

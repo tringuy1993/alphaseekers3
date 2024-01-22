@@ -33,7 +33,7 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
   const colors = ['#e01f54', '#0098d9', '#e01f54', '#0098d9'];
 
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
-  let series = [
+  const series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
@@ -115,8 +115,8 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
       type: 'slider',
       xAxisIndex: [0, 1],
     },
-    dataset: dataset,
-    series: series,
+    dataset,
+    series,
     xAxis: [
       {
         // xAxisIndex: 0,

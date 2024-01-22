@@ -1,7 +1,8 @@
 import cx from 'clsx';
 import { useState } from 'react';
 import { Avatar, Menu, rem, Button } from '@mantine/core';
-import { IconLogout, IconSettings, IconSwitchHorizontal } from '@tabler/icons-react';
+import Link from 'next/link';
+import { IconLogout, IconSettings } from '@tabler/icons-react';
 import classes from './UserMenu.module.css';
 import { useAuth } from '@/app/authentication/context';
 import { siteLinks } from '@/config/site';
@@ -36,18 +37,13 @@ export function UserMenu() {
           <Menu.Dropdown>
             <Menu.Label>Settings</Menu.Label>
             <Menu.Item
+              component={Link}
+              href={siteLinks.profile.href}
               leftSection={
                 <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
               }
             >
-              Account settings
-            </Menu.Item>
-            <Menu.Item
-              leftSection={
-                <IconSwitchHorizontal style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-              }
-            >
-              Change account
+              {siteLinks.profile.title}
             </Menu.Item>
             <Menu.Item
               leftSection={<IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}

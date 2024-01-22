@@ -43,7 +43,7 @@ export default function PageOptionsTime() {
   const [ticker, setTicker] = useState('$SPX.X');
   const PARAMS = {
     und_symbol: ticker,
-    greek: greek,
+    greek,
     startDate: formatDate(dateRange[0] as Date),
     endDate: formatDate(dateRange[1] as Date),
   };

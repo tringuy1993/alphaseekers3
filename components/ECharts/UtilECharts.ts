@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { GetAllModifiedToSData, GetModifiedToSData } from './DataEChart';
 
 export function modify_data(data, greek) {
@@ -7,9 +8,9 @@ export function modify_data(data, greek) {
     modified_data[i].index = i;
   }
 
-  const nonzero_data = modified_data?.filter((obj) => {
-    return obj.c_notion_expo !== 0 && obj.p_notion_expo !== 0;
-  });
+  const nonzero_data = modified_data?.filter(
+    (obj) => obj.c_notion_expo !== 0 && obj.p_notion_expo !== 0
+  );
 
   return { modified_data, nonzero_data };
 }

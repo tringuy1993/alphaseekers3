@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { formatNumbers, datasets, commonOptions } from '../UtilECharts';
 
 export function EChart0DTE_Opts(chartData) {
@@ -7,7 +8,7 @@ export function EChart0DTE_Opts(chartData) {
   const legends = ['OTM_Mark_Premium', 'Last Price'];
   const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
-  let series = [
+  const series = [
     {
       datasetIndex: 0,
       xAxisIndex: 0,
@@ -36,8 +37,8 @@ export function EChart0DTE_Opts(chartData) {
     ...commonOptions,
     legend: {},
     // grid: [{ left: 30, right: 30, bottom: 30 }],
-    dataset: dataset,
-    series: series,
+    dataset,
+    series,
     xAxis: [
       {
         xAxisIndex: 0,

@@ -1,7 +1,6 @@
+import React from 'react';
 import { Card } from '@mantine/core';
 import classes from './CustomCard.module.css';
-
-import React from 'react'; // Adjust the import path as necessary
 
 // Define the props interface for CustomCard
 interface CustomCardProps extends React.HTMLAttributes<HTMLDivElement> {

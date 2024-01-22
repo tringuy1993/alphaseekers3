@@ -40,14 +40,14 @@ const data = [
   },
 ];
 
-interface CardProps {
+interface PaperCardProps {
   image: string;
   title: string;
-  category: string;
+  // category: string;
   link: string;
 }
 
-function Card({ image, title, category, link }: CardProps) {
+function PaperCard({ image, title, link }: PaperCardProps) {
   return (
     <Paper
       shadow="md"
@@ -56,23 +56,7 @@ function Card({ image, title, category, link }: CardProps) {
       style={{ backgroundImage: `url(${image})` }}
       className={classes.card}
     >
-      {/* <div>
-        <Text className={classes.category} size="xs">
-          {category}
-        </Text>
-        <Title order={3} className={classes.title}>
-          {title}
-        </Title>
-      </div> */}
-
-      <Button
-        // variant="white"
-        color="dark"
-        className={classes.category}
-        component="a"
-        target="_blank"
-        href={link}
-      >
+      <Button color="dark" className={classes.category} component="a" target="_blank" href={link}>
         {title}
       </Button>
     </Paper>
@@ -83,7 +67,7 @@ export const Images: React.FC = () => {
   const autoplay = useRef(Autoplay({ delay: 15000 }));
   const slides = data.map((img) => (
     <Carousel.Slide key={img.title}>
-      <Card {...img} />
+      <PaperCard {...img} />
     </Carousel.Slide>
   ));
 

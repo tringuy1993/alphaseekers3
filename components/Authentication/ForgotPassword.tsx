@@ -20,7 +20,7 @@ export default function ForgotPassword() {
           return email;
         })}
       >
-        <TextInput label="Your email" placeholder="me@mantine.dev" required />
+        <TextInput label="Your email" placeholder="me@email.dev" required />
         <Group justify="space-between" mt="lg">
           <Anchor c="dimmed" size="sm">
             <Center inline>

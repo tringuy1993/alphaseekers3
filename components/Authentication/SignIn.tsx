@@ -27,13 +27,13 @@ export default function SignIn() {
     <AuthFormLayout authTitle="signin">
       <form onSubmit={form.onSubmit((values) => handleOnSubmit(values))}>
         <TextInput
-          label="email"
-          placeholder="you@mantine.dev"
+          label="Email"
+          placeholder="you@email.dev"
           {...form.getInputProps('email')}
           required
         />
         <PasswordInput
-          label="password"
+          label="Password"
           placeholder="Your password"
           {...form.getInputProps('password')}
           required

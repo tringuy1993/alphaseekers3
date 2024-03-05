@@ -1,3 +1,5 @@
+'use client'
+
 import cx from 'clsx';
 import { useState } from 'react';
 import { Avatar, Menu, rem, Button } from '@mantine/core';
@@ -28,9 +30,9 @@ export function UserMenu() {
           <Menu.Target>
             <Avatar
               src={tenant?.photoURL}
-              alt={tenant?.name}
+              alt='user picture'
               radius="xl"
-              size={35}
+              size={50}
               className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
             />
           </Menu.Target>

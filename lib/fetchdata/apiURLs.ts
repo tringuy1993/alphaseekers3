@@ -19,5 +19,6 @@ export const BACKTEST_OPT_CHAIN = 'api/backtest-data/option-chain/';
 export const BACKTEST_TRACK_ORDER = 'api/backtest-data/track-order/';
 
 export const LIVE_OTM_URL = 'api/data/LiveOTMData/';
+export const LIVE_EXPO_GREEK_URL = 'api/data/LiveExpoGreekData/';
 export const LIVE_OTM_DATES = 'api/data/AvailableOTMDate/';
 export const LIVE_OTM_UTICKERS = 'api/data/AvailableOTMUTickers/';

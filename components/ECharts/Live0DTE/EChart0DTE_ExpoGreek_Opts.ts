@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { formatNumbers, datasets, commonOptions } from '../UtilECharts';
 
-export function EChart0DTE_Opts(chartData) {
+export function EChart0DTE_ExpoGreek_Opts(chartData, greek) {
   // Setting dimensions and get 'dataset' for Echarts
-  const SGdimensions = ['saved_datetime', 'otm_market_premium', 'uticker_last_price', 'atm_market_exp_move',];
+  const SGdimensions = ['saved_datetime', 'total_notional_exposure', 'c_notional_exposure', 'p_notional_exposure',];
   const dataset = datasets(chartData, [], SGdimensions, []);
-  const legends = ['OTM_Mark_Premium', 'Last Price', 'Expected_Move'];
+  const legends = ['Total Notional', 'C_Notional', 'P_Notional'];
   const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
@@ -27,7 +27,7 @@ export function EChart0DTE_Opts(chartData) {
     {
       datasetIndex: 0,
       xAxisIndex: 0,
-      yAxisIndex: 2,
+      yAxisIndex: 1,
       type: 'line',
       itemStyle: { color: colors[2] },
       name: legends[2],
@@ -37,14 +37,14 @@ export function EChart0DTE_Opts(chartData) {
 
   const option = {
     title: [
-      // {
-      //   text: `${symbol} Sum: ${SumTotalGEX}`,
-      //   left: "center",
-      //   textStyle: { fontSize: 30 },
-      // },
+      {
+        text: `${greek}`,
+        left: "center",
+        textStyle: { fontSize: 30 },
+      },
     ],
     ...commonOptions,
-    legend: {},
+    legend: {align: 'right', right: '10%'},
     // grid: [{ left: 30, right: 30, bottom: 30 }],
     dataset,
     series,
@@ -64,7 +64,7 @@ export function EChart0DTE_Opts(chartData) {
     yAxis: [
       {
         type: 'value',
-        name: 'OTM',
+        position: 'right',
         axisLine: {
           show: true,
           lineStyle: {
@@ -86,10 +86,8 @@ export function EChart0DTE_Opts(chartData) {
       },
       {
         type: 'value',
+        position: 'left',
         axisLine: {
-          lineStyle: {
-            color: colors[1]
-          }
         },
         axisLabel: {
           formatter: function (value) {
@@ -106,14 +104,9 @@ export function EChart0DTE_Opts(chartData) {
       },
       {
         type: 'value',
-        name: 'Exp',
         position: 'left',
-        offset: 35,
         axisLine: {
           show: true,
-          lineStyle: {
-            color: colors[2]
-          }
         },
         axisLabel: {
           formatter: function (value) {

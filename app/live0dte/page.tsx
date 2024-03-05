@@ -5,6 +5,7 @@ import { SelectUticker } from './selectUTicker';
 import EChart0DTE from '@/components/ECharts/Live0DTE/EChart0DTE';
 import { SelectUDate } from './selectDate';
 import CustomCard from '@/components/CustomCard/CustomCard';
+import EChart0DTE_ExpoGreek from '@/components/ECharts/Live0DTE/EChart0DTE_ExpoGreek';
 
 export default function PageLive0DTE() {
   const [uTicker, setUTicker] = useState('$SPX.X');
@@ -16,6 +17,10 @@ export default function PageLive0DTE() {
 
   const chartParams = { und_symbol: uTicker, date: defaultDate };
 
+  const gammaChartParams = {...chartParams, greek: 'Gamma'};
+  const vannaChartParams = {...chartParams, greek: 'Vanna'};
+  const deltaChartParams = {...chartParams, greek: 'Delta'};
+
   return (
     <div className="flex flex-col items-center justify-center">
       <header>
@@ -25,6 +30,9 @@ export default function PageLive0DTE() {
 
       <CustomCard>
         <EChart0DTE params={chartParams} />
+        <EChart0DTE_ExpoGreek params={gammaChartParams}/>
+        <EChart0DTE_ExpoGreek params={vannaChartParams}/>
+        <EChart0DTE_ExpoGreek params={deltaChartParams}/>
       </CustomCard>
     </div>
   );

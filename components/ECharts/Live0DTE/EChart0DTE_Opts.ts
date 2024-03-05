@@ -3,9 +3,9 @@ import { formatNumbers, datasets, commonOptions } from '../UtilECharts';
 
 export function EChart0DTE_Opts(chartData) {
   // Setting dimensions and get 'dataset' for Echarts
-  const SGdimensions = ['saved_datetime', 'otm_market_premium', 'uticker_last_price', 'atm_market_exp_move',];
+  const SGdimensions = ['saved_datetime', 'uticker_last_price', 'otm_market_premium', 'atm_market_exp_move',];
   const dataset = datasets(chartData, [], SGdimensions, []);
-  const legends = ['OTM_Mark_Premium', 'Last Price', 'Expected_Move'];
+  const legends = ['Last Price', 'OTM_Mark_Premium', 'Expected_Move'];
   const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
@@ -44,6 +44,12 @@ export function EChart0DTE_Opts(chartData) {
       // },
     ],
     ...commonOptions,
+    tooltip: {
+      ...commonOptions.tooltip,
+      axisPointer: {
+        type: 'cross'
+      }
+    },
     legend: {},
     // grid: [{ left: 30, right: 30, bottom: 30 }],
     dataset,
@@ -64,7 +70,8 @@ export function EChart0DTE_Opts(chartData) {
     yAxis: [
       {
         type: 'value',
-        name: 'OTM',
+        position: 'right',
+        // name: 'OTM',
         axisLine: {
           show: true,
           lineStyle: {
@@ -86,6 +93,8 @@ export function EChart0DTE_Opts(chartData) {
       },
       {
         type: 'value',
+        name: 'OTM',
+        position: 'left',
         axisLine: {
           lineStyle: {
             color: colors[1]

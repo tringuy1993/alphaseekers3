@@ -43,7 +43,14 @@ export function EChart0DTE_ExpoGreek_Opts(chartData, greek) {
         textStyle: { fontSize: 30 },
       },
     ],
+    
     ...commonOptions,
+    tooltip: {
+      ...commonOptions.tooltip,
+      axisPointer: {
+        type: 'cross'
+      }
+    },
     legend: {align: 'right', right: '10%'},
     // grid: [{ left: 30, right: 30, bottom: 30 }],
     dataset,
@@ -76,6 +83,7 @@ export function EChart0DTE_ExpoGreek_Opts(chartData, greek) {
             return formatNumbers(value);
           },
           fontWeight: 'bold',
+          color: colors[0],
         },
         max: function (value) {
           return value.max;
@@ -88,6 +96,10 @@ export function EChart0DTE_ExpoGreek_Opts(chartData, greek) {
         type: 'value',
         position: 'left',
         axisLine: {
+          show: true,
+          lineStyle: {
+            color: colors[1]
+          }
         },
         axisLabel: {
           formatter: function (value) {

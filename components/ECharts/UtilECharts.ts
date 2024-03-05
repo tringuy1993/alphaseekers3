@@ -198,10 +198,10 @@ export const commonOptions = {
       return obj;
     },
   },
-  axisPointer: {
-    link: { xAxisIndex: 'all' },
-    label: { backgroundColor: '#777' },
-  },
+  // axisPointer: {
+  //   link: { xAxisIndex: 'all' },
+  //   label: { backgroundColor: '#777' },
+  // },
   backgroundColor: 'transparent',
   legend: { left: 50, bottom: 65 },
   toolbox: {

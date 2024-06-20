@@ -8426,6 +8426,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dexie-react-hooks@npm:^1.1.7":
+  version: 1.1.7
+  resolution: "dexie-react-hooks@npm:1.1.7"
+  peerDependencies:
+    "@types/react": ">=16"
+    dexie: ^3.2 || ^4.0.1-alpha
+    react: ">=16"
+  checksum: 3ff38e715a52bff9132b483963246ea5372a282d9257c8c2bf8891c522fa0d761d1e362bb352eb63386f49ea9a55c52e1bcc5cce2019deb1eceba40d8a88631d
+  languageName: node
+  linkType: hard
+
+"dexie@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "dexie@npm:4.0.4"
+  checksum: e278b4533112c0af1f90363c25eda3715c4f05bcdd13cee32f5124e1dadce4ea1996ba1f15d4d74d5aba8f7fa2be39c4a8968e3bea925ae16c76655b688bea2b
+  languageName: node
+  linkType: hard
+
 "diff-sequences@npm:^29.6.3":
   version: 29.6.3
   resolution: "diff-sequences@npm:29.6.3"
@@ -12435,6 +12453,8 @@ __metadata:
     clsx: "npm:^2.1.0"
     date-fns: "npm:^3.2.0"
     dayjs: "npm:^1.11.10"
+    dexie: "npm:^4.0.4"
+    dexie-react-hooks: "npm:^1.1.7"
     echarts: "npm:^5.4.3"
     echarts-for-react: "npm:^3.0.2"
     embla-carousel-autoplay: "npm:^7.1.0"

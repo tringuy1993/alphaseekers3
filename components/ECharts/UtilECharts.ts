@@ -294,6 +294,7 @@ export function filterArray(chartData, key, value) {
 }
 
 export function findClosestIndex(arr, value) {
+  console.log(value)
   return arr.reduce((closestIndex, current, index) => {
     const currentDiff = Math.abs(current.strike_price - value);
     const closestDiff = Math.abs(arr[closestIndex].strike_price - value);

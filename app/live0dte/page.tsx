@@ -6,6 +6,7 @@ import EChart0DTE from '@/components/ECharts/Live0DTE/EChart0DTE';
 import { SelectUDate } from './selectDate';
 import CustomCard from '@/components/CustomCard/CustomCard';
 import EChart0DTE_ExpoGreek from '@/components/ECharts/Live0DTE/EChart0DTE_ExpoGreek';
+import EChart0DTE_Volume from '@/components/ECharts/Live0DTE/EChart0DTE_Volume';
 
 export default function PageLive0DTE() {
   const [uTicker, setUTicker] = useState('$SPX.X');
@@ -16,6 +17,7 @@ export default function PageLive0DTE() {
   };
 
   const chartParams = { und_symbol: uTicker, date: defaultDate };
+  const chartParams2 = { und_symbol: uTicker, date: defaultDate};
 
   const gammaChartParams = {...chartParams, greek: 'Gamma'};
   const vannaChartParams = {...chartParams, greek: 'Vanna'};
@@ -30,6 +32,7 @@ export default function PageLive0DTE() {
 
       <CustomCard>
         <EChart0DTE params={chartParams} />
+        <EChart0DTE_Volume params = {chartParams2}/>
         <EChart0DTE_ExpoGreek params={gammaChartParams}/>
         <EChart0DTE_ExpoGreek params={vannaChartParams}/>
         <EChart0DTE_ExpoGreek params={deltaChartParams}/>

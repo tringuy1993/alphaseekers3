@@ -88,7 +88,11 @@ export function EChart0DTE_Opts(chartData) {
           return value.max;
         },
         min: function (value) {
-          return value.min;
+
+          const std3_max = value.max - 2*Math.sqrt(value.max)
+
+
+          return value.min < std3_max ? std3_max: value.min;
         },
       },
       {

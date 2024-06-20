@@ -1,4 +1,5 @@
 export const BASE_URL = 'https://www.alpha-seekers.com/';
+// export const BASE_URL = 'http://127.0.0.1:8000/'
 export const GAMMA_URL = 'api/data/gamma/';
 export const GREEK_EXPO_URL = 'api/data/greeksexposure/';
 export const THEO_URL = 'api/data/theogamma/';
@@ -19,6 +20,7 @@ export const BACKTEST_OPT_CHAIN = 'api/backtest-data/option-chain/';
 export const BACKTEST_TRACK_ORDER = 'api/backtest-data/track-order/';
 
 export const LIVE_OTM_URL = 'api/data/LiveOTMData/';
+export const LIVE_OTM_VOLUME_URL = 'api/data/LiveOTMVolume/';
 export const LIVE_EXPO_GREEK_URL = 'api/data/LiveExpoGreekData/';
 export const LIVE_OTM_DATES = 'api/data/AvailableOTMDate/';
 export const LIVE_OTM_UTICKERS = 'api/data/AvailableOTMUTickers/';

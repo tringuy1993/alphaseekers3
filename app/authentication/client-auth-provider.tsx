@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import {
   IdTokenResult,
   signOut,
@@ -45,7 +45,7 @@ const mapFirebaseResponseToTenant = (result: IdTokenResult, user: FirebaseUser):
   };
 };
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+const AuthProviderInner = ({ children }: AuthProviderProps) => {
   // const firstLoadRef = useRef(true);
   const [currentUser, setCurrentUser] = useState();
   const [tenant, setTenant] = useState<Tenant>();
@@ -111,5 +111,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider value={contextData}>{!isAuthLoading && children}</AuthContext.Provider>
+  );
+};
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  return (
+    <Suspense fallback={null}>
+      <AuthProviderInner>{children}</AuthProviderInner>
+    </Suspense>
   );
 };

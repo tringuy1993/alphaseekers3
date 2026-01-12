@@ -10,8 +10,15 @@ const axiosInstance = axios.create({
 });
 
 const axiosFetcher = async (url, params = {}, options = {}) => {
-  // getIdToken() to ensure that the token is always updated.
-  const token = await Auth.currentUser?.getIdToken();
+  // getIdToken(true) forces a token refresh to prevent expired token errors
+  let token = null;
+  try {
+    if (Auth.currentUser) {
+      token = await Auth.currentUser.getIdToken(true);
+    }
+  } catch (tokenError) {
+    console.error('Token refresh failed:', tokenError);
+  }
   try {
     const response = await axiosInstance.get(url, {
       params,

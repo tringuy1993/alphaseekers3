@@ -12,7 +12,16 @@ const axiosInstance = axios.create({
 });
 
 const axiosFetchSave = async (url, params = {}, options = {}) => {
-    const token = await Auth.currentUser?.getIdToken();
+    // getIdToken(true) forces a token refresh to prevent expired token errors
+    let token = null;
+    try {
+        if (Auth.currentUser) {
+            token = await Auth.currentUser.getIdToken(true);
+        }
+    } catch (tokenError) {
+        console.error('Token refresh failed:', tokenError);
+    }
+    const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
     try {
         // Check if the volumeTable has any data and if the date matches the parameters
@@ -30,6 +39,7 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
             // Fetch current data status from server for extra validation
             const responseServerDataLength = await axiosInstance.get(url, {
                 params: {...params, check_length: true},
+                headers: authHeaders,
                 ...options,
             });
             const serverDataLength = responseServerDataLength.data.data[0]['count'];
@@ -47,6 +57,7 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
 
                 const updatedData = await axiosInstance.get(url, {
                     params: modParamsDate,
+                    headers: authHeaders,
                     ...options,
                 });
 
@@ -62,6 +73,7 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
 
             const freshData = await axiosInstance.get(url, {
                 params,
+                headers: authHeaders,
                 ...options,
             });
 

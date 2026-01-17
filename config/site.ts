@@ -11,6 +11,7 @@ export const siteLinks = {
   optionsdata: { title: 'Options Data', href: '/options-data' },
   backtest: { title: 'Back Test', href: '/backtest' },
   optionstime: { title: 'Options Time', href: '/options-time' },
+  gammadashboard: { title: 'Gamma Dashboard', href: '/gamma-dashboard' },
   profile: { title: 'Account settings', href: '/profile' },
 
   live0dte: { title: 'Live 0DTE', href: '/live0dte' },
@@ -25,6 +26,7 @@ export const authorizedLinksList = [
   siteLinks.optionsdata.href,
   siteLinks.backtest.href,
   siteLinks.optionstime.href,
+  siteLinks.gammadashboard.href,
   siteLinks.profile.href,
 ];
 

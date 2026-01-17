@@ -2,7 +2,7 @@ import { Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { IconHome2, IconGauge, IconDeviceDesktopAnalytics } from '@tabler/icons-react';
+import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconChartAreaLine } from '@tabler/icons-react';
 import { siteLinks } from '@/config/site';
 import classes from './SideBar.module.css';
 
@@ -31,6 +31,7 @@ function NavbarLink({ icon: Icon, label, href, active }: NavbarLinkProps) {
 const mockdata = [
   { icon: IconHome2, label: siteLinks.optionsdata.title, href: siteLinks.optionsdata.href },
   { icon: IconGauge, label: siteLinks.optionstime.title, href: siteLinks.optionstime.href },
+  { icon: IconChartAreaLine, label: siteLinks.gammadashboard.title, href: siteLinks.gammadashboard.href },
   {
     icon: IconDeviceDesktopAnalytics,
     label: siteLinks.backtest.title,

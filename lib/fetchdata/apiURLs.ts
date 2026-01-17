@@ -93,3 +93,22 @@ export const LIVE_OTM_DATES = 'api/data/AvailableOTMDate/';
 
 // Available underlying tickers for OTM data
 export const LIVE_OTM_UTICKERS = 'api/data/AvailableOTMUTickers/';
+
+// =============================================================================
+// Gamma Dashboard Endpoints (Public)
+// =============================================================================
+
+// Gamma exposure time series with price overlay
+export const GAMMA_DASHBOARD_TIME_SERIES_URL = 'api/data/gamma-dashboard/time-series/';
+
+// Gamma heatmap data (time x strike)
+export const GAMMA_DASHBOARD_HEATMAP_URL = 'api/data/gamma-dashboard/heatmap/';
+
+// Gamma levels by strike (call/put bar chart)
+export const GAMMA_DASHBOARD_LEVELS_URL = 'api/data/gamma-dashboard/levels/';
+
+// Available expirations for filtering
+export const GAMMA_DASHBOARD_EXPIRATIONS_URL = 'api/data/gamma-dashboard/expirations/';
+
+// Available trading dates with data
+export const GAMMA_DASHBOARD_DATES_URL = 'api/data/gamma-dashboard/available-dates/';

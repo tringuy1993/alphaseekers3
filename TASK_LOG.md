@@ -10,6 +10,7 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 | Date | Time | Task | Status | Branch | Notes |
 |------|------|------|--------|--------|-------|
+| 2026-01-16 | 19:00 | Deploy to production | Complete | `main` | Added switch-env.sh, built with prod env, restarted PM2 |
 | 2026-01-16 | 18:00 | Fix critical dev mode issues | Complete | `fix/dev-mode-setup` | Fixed: apiURLs.ts (env var), next.config.mjs (comments, strictMode), middleware.ts (CORS typo, comments). Local testing passed. |
 | 2026-01-16 | 16:45 | Create .env.example | Complete | - | Template for environment variables |
 | 2026-01-16 | 16:35 | Create CLAUDE.md | Complete | - | Project instruction file for Claude Code |

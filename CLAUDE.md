@@ -6,6 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Workflow Rules
 
+### Task Logging
+- **Update TASK_LOG.md when starting a task** - add entry with "In Progress" status
+- **Update TASK_LOG.md when completing a task** - change status to "Complete" and add notes
+- Include details about what was changed and any issues encountered
+- Move completed items from Pending Tasks to Task History
+
 ### Branch Strategy
 - **Never commit directly to `main`** - always create a feature branch first
 - Before making any code changes, create a branch: `git checkout -b feature/<description>`
@@ -117,6 +123,23 @@ Required variables:
 - `NEXT_PUBLIC_FIREBASE_*` - Firebase client configuration
 
 See `.env.example` for the complete list.
+
+### Switching Between Dev and Production
+
+Use the `switch-env.sh` script to quickly switch environment settings:
+
+```bash
+# Switch to development (localhost API)
+./switch-env.sh dev
+
+# Switch to production (alpha-seekers.com API)
+./switch-env.sh prod
+
+# Check current environment
+./switch-env.sh status
+```
+
+**Important:** Always switch to production before running `npm run build` for deployment.
 
 ## API Integration
 

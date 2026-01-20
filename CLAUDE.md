@@ -6,163 +6,108 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Workflow Rules
 
-### Task Logging
-- **Update TASK_LOG.md when starting a task** - add entry with "In Progress" status
-- **Update TASK_LOG.md when completing a task** - change status to "Complete" and add notes
-- Include details about what was changed and any issues encountered
-- Move completed items from Pending Tasks to Task History
-
-### Branch Strategy
-- **Never commit directly to `main`** - always create a feature branch first
-- Before making any code changes, create a branch: `git checkout -b feature/<description>`
-- Test all changes locally before committing
-- Merge to main only after testing is complete
-
-### Code Quality
-- Run `yarn test` before committing (runs prettier, lint, typecheck, jest)
-- Fix all TypeScript errors - do not ignore them
-- Fix all ESLint warnings - do not suppress them
+- **Update TASK_LOG.md** when starting (In Progress) and completing tasks (Complete)
+- **Never commit directly to `main`** - create a feature branch: `git checkout -b feature/<description>`
+- Run `npm test` before committing (runs prettier, lint, typecheck, jest)
 
 ## Project Overview
 
-This is the Next.js 14 frontend for the Alpha-Seekers financial options analytics platform. It provides data visualization and backtesting interfaces for options traders.
+Next.js 14 frontend for Alpha-Seekers financial options analytics platform. Visualizes Greek exposures (gamma, delta, vanna) for options traders.
 
-**Data Flow:**
-```
-asbackend (Django API) → alphaseekers3 (this project) → User Browser
-```
+**Data Flow:** `asbackend (Django API) → alphaseekers3 (this project) → User Browser`
 
-**Parent Project:** See [Alpha-Seeker-Projects](https://github.com/tringuy1993/Alpha-Seeker-Projects) for overall architecture.
+**Parent Project:** See [Alpha-Seeker-Projects](../CLAUDE.md) for database schema and overall architecture.
 
 ## Commands
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Production build
-npm run build
-
-# Run all tests (prettier, lint, typecheck, jest)
-npm test
-
-# Individual test commands
-npm run typecheck        # TypeScript type checking
-npm run lint             # ESLint + Stylelint
-npm run jest             # Run Jest tests
-npm run jest:watch       # Run tests in watch mode
-
-# Storybook
-npm run storybook        # Start Storybook on port 6006
-npm run storybook:build  # Build Storybook for production
-
-# Bundle analysis
-npm run analyze          # Analyze bundle size
+npm run dev          # Start development server
+npm run build        # Production build
+npm test             # Full suite: prettier, lint, typecheck, jest
+npm run typecheck    # TypeScript only
+npm run lint         # ESLint + Stylelint
+npm run jest         # Jest only
+npm run jest:watch   # Jest watch mode
+npm run storybook    # Storybook on port 6006
+npm run analyze      # Bundle analysis
 ```
 
 ## Architecture
 
 ### Tech Stack
 - **Framework:** Next.js 14 (App Router)
-- **UI Library:** Mantine 7 with PostCSS
-- **State Management:** Zustand (stores in `store/`)
+- **UI:** Mantine 7 with PostCSS
+- **State:** Zustand (`store/`)
 - **Charts:** ECharts via echarts-for-react
-- **Authentication:** Firebase Authentication
-- **Data Fetching:** SWR with custom utilities
-- **Local Cache:** IndexedDB via Dexie
+- **Auth:** Firebase Authentication
+- **Data Fetching:** SWR with custom hooks (`lib/fetchdata/`)
 
-### Directory Structure
+### Key Patterns
 
+**Data Fetching:** Use the custom SWR hook that handles Firebase auth tokens automatically:
+```typescript
+import useCustomSWR from '@/lib/fetchdata/fetch-custom';
+import { GREEK_EXPO_URL } from '@/lib/fetchdata/apiURLs';
+
+const { data, isLoading, isError } = useCustomSWR(GREEK_EXPO_URL, { ticker: 'SPX' });
 ```
-alphaseekers3/
-├── app/                    # Next.js App Router pages
-│   ├── (protected)/        # Auth-protected routes
-│   │   ├── options-data/   # Main options dashboard
-│   │   ├── backtest/       # Backtesting interface
-│   │   ├── options-time/   # Time-series analysis
-│   │   └── profile/        # User profile
-│   ├── authentication/     # Login/signup pages
-│   ├── live0dte/           # Public live 0DTE view
-│   └── layout.tsx          # Root layout
-├── components/             # Reusable React components
-├── config/                 # App configuration
-│   ├── site.ts             # Site config and routes
-│   └── firebase-client-config.ts
-├── lib/                    # Utilities
-│   ├── fetchdata/          # API client and URLs
-│   └── database/           # IndexedDB (Dexie)
-├── store/                  # Zustand state stores
-└── public/                 # Static assets
+
+**Zustand Stores:** Backtesting state is in `store/BTOrders/`. Stores follow the pattern:
+```typescript
+// store/example.ts
+export const useExampleStore = create<State & Actions>((set) => ({ ... }));
 ```
+
+**Chart Components:** All ECharts components are in `components/ECharts/` organized by feature (ToS, Live0DTE, BackTest, GammaDashboard).
 
 ### Routes
 
 | Route | Auth | Description |
 |-------|------|-------------|
-| `/options-data` | Required | Main options data dashboard |
-| `/backtest` | Required | Backtesting interface |
-| `/options-time` | Required | Time-series Greek analysis |
-| `/profile` | Required | User profile settings |
-| `/live0dte` | Public | Live 0DTE data view |
-| `/music` | Public | Music guessing game |
-| `/authentication/*` | Public | Login/signup flows |
+| `/options-data` | Yes | Main options dashboard |
+| `/backtest` | Yes | Options backtesting |
+| `/options-time` | Yes | Time-series Greek analysis |
+| `/gamma-dashboard` | Yes | SpotGamma-style gamma charts |
+| `/live0dte` | No | Public live 0DTE data |
+| `/music` | No | Music guessing game |
 
-## Environment Variables
+Route authorization is defined in `config/site.ts` via `authorizedLinksList`.
 
-Copy `.env.example` to `.env.local` and fill in the values:
+### API Endpoints
+
+All endpoints defined in `lib/fetchdata/apiURLs.ts`. Key endpoint groups:
+- **Greek Exposure:** `GREEK_EXPO_URL`, `THEO_URL`, `THEOVANNA_URL`
+- **Live Data:** `LIVE_URL`, `LIVE_OTM_URL`, `LIVE_EXPO_GREEK_URL`
+- **Backtesting:** `BACKTEST_URL`, `BACKTEST_OPT_CHAIN`, `BACKTEST_TRACK_ORDER`
+- **Gamma Dashboard:** `GAMMA_DASHBOARD_TIME_SERIES_URL`, `GAMMA_DASHBOARD_HEATMAP_URL`, `GAMMA_DASHBOARD_LEVELS_URL`
+
+## Environment Setup
 
 ```bash
 cp .env.example .env.local
 ```
 
 Required variables:
-- `NEXT_PUBLIC_API_URL` - Backend API base URL
-- `NEXT_PUBLIC_FIREBASE_*` - Firebase client configuration
+- `NEXT_PUBLIC_API_URL` - Backend API URL
+- `NEXT_PUBLIC_FIREBASE_*` - Firebase client config
 
-See `.env.example` for the complete list.
-
-### Switching Between Dev and Production
-
-Use the `switch-env.sh` script to quickly switch environment settings:
+### Switching Environments
 
 ```bash
-# Switch to development (localhost API)
-./switch-env.sh dev
-
-# Switch to production (alpha-seekers.com API)
-./switch-env.sh prod
-
-# Check current environment
-./switch-env.sh status
+./switch-env.sh dev     # Use localhost:8000
+./switch-env.sh prod    # Use alpha-seekers.com
+./switch-env.sh status  # Check current
 ```
 
-**Important:** Always switch to production before running `npm run build` for deployment.
-
-## API Integration
-
-API endpoints are defined in `lib/fetchdata/apiURLs.ts`. The base URL is configured via environment variable:
-
-```typescript
-// Uses NEXT_PUBLIC_API_URL from environment
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/';
-```
+**Always switch to prod before `npm run build` for deployment.**
 
 ## Development Notes
 
 ### Running with Local Backend
-1. Start the Django backend: `cd ../asbackend && python manage.py runserver`
-2. Set `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/` in `.env.local`
-3. Start frontend: `yarn dev`
-
-### Firebase Setup
-1. Create a Firebase project at https://console.firebase.google.com
-2. Enable Authentication with Email/Password provider
-3. Copy client config to `.env.local`
+1. Start Django: `cd ../asbackend && python manage.py runserver`
+2. Start frontend: `npm run dev`
 
 ### Common Issues
-- **CORS errors:** Ensure backend has frontend URL in CORS_ALLOWED_ORIGINS
-- **Auth errors:** Check Firebase config matches backend Firebase Admin config
-- **API 404s:** Verify NEXT_PUBLIC_API_URL is set correctly
+- **CORS errors:** Backend needs frontend URL in CORS_ALLOWED_ORIGINS
+- **Auth errors:** Firebase config must match between frontend and backend
+- **API 404s:** Verify NEXT_PUBLIC_API_URL in .env.local

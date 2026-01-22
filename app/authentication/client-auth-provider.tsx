@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { AuthContext, type SignInCredential, type Tenant } from './context';
+import { AuthContext, type SignInCredential, type Tenant, type TenantInfo } from './context';
 import { Auth } from './firebase';
 import { authorizedLinksList, siteLinks } from '@/config/site';
 
@@ -67,7 +67,7 @@ const AuthProviderInner = ({ children }: AuthProviderProps) => {
   };
   const handleSignOut = async (): Promise<void> => {
     signOut(Auth);
-    localStorage.removeItem('tenant');
+    localStorage.removeItem('tenantInfo');
     const params = searchParams.get('redirect');
     const redirectLink = params === null ? siteLinks.optionsdata.href : params;
     router.push(redirectLink as string);
@@ -79,10 +79,21 @@ const AuthProviderInner = ({ children }: AuthProviderProps) => {
       const tokenResult = await firebaseUser?.getIdTokenResult();
       const newTenant = mapFirebaseResponseToTenant(tokenResult, firebaseUser);
       setTenant(newTenant);
-      localStorage.setItem('tenant', JSON.stringify(newTenant));
+
+      // Only store non-sensitive info in localStorage (no token)
+      const tenantInfo: TenantInfo = {
+        id: newTenant.id,
+        name: newTenant.name,
+        email: newTenant.email,
+        photoURL: newTenant.photoURL,
+        emailVerified: newTenant.emailVerified,
+        isAnonymous: newTenant.isAnonymous,
+      };
+      localStorage.setItem('tenantInfo', JSON.stringify(tenantInfo));
     } else {
       setCurrentUser(firebaseUser);
       setTenant(null);
+      localStorage.removeItem('tenantInfo');
     }
     setIsAuthLoading(false);
   };

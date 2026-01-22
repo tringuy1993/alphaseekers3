@@ -8,14 +8,18 @@ export interface User extends Omit<UserInfo, 'providerId'> {
   emailVerified: boolean;
 }
 
-export interface Tenant {
+// TenantInfo: Safe to store in localStorage (no sensitive data)
+export interface TenantInfo {
   id: string;
   name: string | null;
   email: string | null;
   photoURL: string | null;
   emailVerified: boolean;
   isAnonymous: boolean;
-  // customClaims: CustomClaims;
+}
+
+// Tenant: Full user data with token (memory only, never persist)
+export interface Tenant extends TenantInfo {
   idToken: string;
 }
 export type SignInCredential = {

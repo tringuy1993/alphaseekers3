@@ -6,6 +6,28 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 ## Task History
 
+### 2026-01-21
+
+| Date | Time | Task | Status | Branch | Notes |
+|------|------|------|--------|--------|-------|
+| 2026-01-21 | - | Phase 2: Frontend Security Hardening | Complete | `feature/auth-security-hardening` | See details below |
+
+#### Phase 2: Frontend Security Hardening (2026-01-21)
+
+**Task 2.1: Remove token from localStorage**
+
+*Files modified:*
+- `app/authentication/context.tsx` - Added `TenantInfo` interface (without token) for safe localStorage storage
+- `app/authentication/client-auth-provider.tsx` - Changed localStorage key from `'tenant'` to `'tenantInfo'`, only stores non-sensitive data
+
+**Task 2.2: Add token refresh error handling**
+
+*Files modified:*
+- `lib/fetchdata/fetch-custom.ts` - Added `handleSessionExpired()` function, handles auth errors by redirecting to login
+- `lib/fetchdata/fetch-custom-save.ts` - Same changes for IndexedDB-cached fetch hook
+
+---
+
 ### 2026-01-16
 
 | Date | Time | Task | Status | Branch | Notes |

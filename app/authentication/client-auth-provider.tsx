@@ -11,7 +11,12 @@ import {
 import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { AuthContext, type SignInCredential, type Tenant, type TenantInfo } from './context';
 import { Auth } from './firebase';
-import { authorizedLinksList, siteLinks } from '@/config/site';
+import {
+  AUTH_STORAGE_KEYS,
+  AUTH_ROUTES,
+  PROTECTED_ROUTES,
+  getLoginUrlWithRedirect,
+} from '@/lib/auth/config';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -58,19 +63,18 @@ const AuthProviderInner = ({ children }: AuthProviderProps) => {
     await signInWithEmailAndPassword(Auth, userInput.email, userInput.password)
       .then(() => {
         const params = searchParams.get('redirect');
-        const redirectLink = params === null ? siteLinks.optionsdata.href : params;
-        router.push(redirectLink as string);
+        const redirectLink = params ?? AUTH_ROUTES.defaultAfterLogin;
+        router.push(redirectLink);
       })
       .catch((error) => {
         setErrAuth(error.code);
       });
   };
+
   const handleSignOut = async (): Promise<void> => {
     signOut(Auth);
-    localStorage.removeItem('tenantInfo');
-    const params = searchParams.get('redirect');
-    const redirectLink = params === null ? siteLinks.optionsdata.href : params;
-    router.push(redirectLink as string);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.tenantInfo);
+    router.push(AUTH_ROUTES.defaultAfterLogout);
     router.refresh();
   };
   const handleAuthStateChanged = async (firebaseUser: FirebaseUser | null) => {
@@ -89,11 +93,11 @@ const AuthProviderInner = ({ children }: AuthProviderProps) => {
         emailVerified: newTenant.emailVerified,
         isAnonymous: newTenant.isAnonymous,
       };
-      localStorage.setItem('tenantInfo', JSON.stringify(tenantInfo));
+      localStorage.setItem(AUTH_STORAGE_KEYS.tenantInfo, JSON.stringify(tenantInfo));
     } else {
       setCurrentUser(firebaseUser);
       setTenant(null);
-      localStorage.removeItem('tenantInfo');
+      localStorage.removeItem(AUTH_STORAGE_KEYS.tenantInfo);
     }
     setIsAuthLoading(false);
   };
@@ -115,10 +119,10 @@ const AuthProviderInner = ({ children }: AuthProviderProps) => {
   const pathName = usePathname();
 
   useEffect(() => {
-    if (!isAuthLoading && !tenant && authorizedLinksList.includes(pathName)) {
-      redirect(`${siteLinks.signin.href}?redirect=${pathName}`);
+    if (!isAuthLoading && !tenant && PROTECTED_ROUTES.includes(pathName as any)) {
+      redirect(getLoginUrlWithRedirect(pathName));
     }
-  }, [pathName, handleSignOut]);
+  }, [pathName, isAuthLoading, tenant]);
 
   return (
     <AuthContext.Provider value={contextData}>{!isAuthLoading && children}</AuthContext.Provider>

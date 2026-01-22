@@ -4,6 +4,11 @@ import { signOut } from 'firebase/auth';
 
 import { Auth } from '@/app/authentication/firebase';
 import { BASE_URL } from './apiURLs';
+import {
+  AUTH_STORAGE_KEYS,
+  SESSION_EXPIRED_ERROR_CODES,
+  getLoginUrlWithRedirect,
+} from '@/lib/auth/config';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -12,10 +17,10 @@ const axiosInstance = axios.create({
 
 // Handle session expiration by clearing state and redirecting to login
 const handleSessionExpired = async () => {
-  localStorage.removeItem('tenantInfo');
+  localStorage.removeItem(AUTH_STORAGE_KEYS.tenantInfo);
   await signOut(Auth);
   const currentPath = window.location.pathname;
-  window.location.href = `/authentication/signin?redirect=${encodeURIComponent(currentPath)}`;
+  window.location.href = getLoginUrlWithRedirect(currentPath);
 };
 
 const axiosFetcher = async (url, params = {}, options = {}) => {
@@ -30,12 +35,7 @@ const axiosFetcher = async (url, params = {}, options = {}) => {
 
     // Handle specific Firebase auth errors that indicate session is invalid
     const errorCode = tokenError?.code;
-    if (
-      errorCode === 'auth/user-token-expired' ||
-      errorCode === 'auth/user-disabled' ||
-      errorCode === 'auth/invalid-user-token' ||
-      errorCode === 'auth/user-not-found'
-    ) {
+    if (SESSION_EXPIRED_ERROR_CODES.includes(errorCode)) {
       await handleSessionExpired();
       throw new Error('Session expired. Please sign in again.');
     }

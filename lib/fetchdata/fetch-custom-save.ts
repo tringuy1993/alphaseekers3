@@ -96,11 +96,11 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
       const und_symbol = params['und_symbol'];
 
       if (lastEntry['uticker'] === und_symbol && count === serverDataLength) {
-        console.log('Uticker and Data Length Matches');
+        if (process.env.NODE_ENV === 'development') console.log('Uticker and Data Length Matches');
         const allData = await volumeTable.toArray();
         return { data: allData };
       } else {
-        console.log('Fetching updated data from API');
+        if (process.env.NODE_ENV === 'development') console.log('Fetching updated data from API');
         const modParamsDate = { ...params, newDate: lastEntry['saved_datetime_ms'] };
 
         const updatedData = await axiosInstance.get(url, {
@@ -116,7 +116,7 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
         }
       }
     } else {
-      console.log('No data in volumeTable or Data is not the right date, fetching from API');
+      if (process.env.NODE_ENV === 'development') console.log('No data in volumeTable or Data is not the right date, fetching from API');
       await truncateVolumeTable(); // Ensure this function is async or handles the deletion properly
 
       const freshData = await axiosInstance.get(url, {

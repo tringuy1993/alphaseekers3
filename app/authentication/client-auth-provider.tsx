@@ -16,6 +16,7 @@ import {
   AUTH_ROUTES,
   PROTECTED_ROUTES,
   getLoginUrlWithRedirect,
+  getSafeRedirect,
 } from '@/lib/auth/config';
 
 interface AuthProviderProps {
@@ -63,7 +64,7 @@ const AuthProviderInner = ({ children }: AuthProviderProps) => {
     await signInWithEmailAndPassword(Auth, userInput.email, userInput.password)
       .then(() => {
         const params = searchParams.get('redirect');
-        const redirectLink = params ?? AUTH_ROUTES.defaultAfterLogin;
+        const redirectLink = getSafeRedirect(params);
         router.push(redirectLink);
       })
       .catch((error) => {

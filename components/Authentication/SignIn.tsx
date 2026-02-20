@@ -12,8 +12,9 @@ export default function SignIn() {
   const form = useForm({
     initialValues: { email: '', password: '' },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      password: (value) => (value.length < 5 ? 'Longer Password!' : null),
+      email: (value) =>
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value) ? null : 'Invalid email',
+      password: (value) => (value.length < 8 ? 'Password must be at least 8 characters' : null),
     },
   });
 

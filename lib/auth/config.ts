@@ -70,6 +70,21 @@ export function isAuthRoute(pathname: string): boolean {
   return pathname.startsWith('/authentication');
 }
 
+/**
+ * Validate that a redirect path is safe (relative path only, no open redirect).
+ * Returns true only for paths starting with '/' but not '//' (protocol-relative URLs).
+ */
+export function isValidRedirect(path: string | null | undefined): boolean {
+  return typeof path === 'string' && path.startsWith('/') && !path.startsWith('//');
+}
+
+/**
+ * Sanitize a redirect path, returning the default route if invalid.
+ */
+export function getSafeRedirect(path: string | null | undefined): string {
+  return isValidRedirect(path) ? path! : AUTH_ROUTES.defaultAfterLogin;
+}
+
 export function getLoginUrlWithRedirect(returnPath: string): string {
   return `${AUTH_ROUTES.login}?redirect=${encodeURIComponent(returnPath)}`;
 }

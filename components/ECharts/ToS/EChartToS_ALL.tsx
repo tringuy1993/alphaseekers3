@@ -36,26 +36,24 @@ export default function EChartToSALL({ params }) {
     refreshInterval: 60000,
   });
 
-  let chartDataList;
-  if (data && !isLoading && !isError) {
-    chartDataList = getChartDataList(data.data, []);
-  }
+  if (isLoading) return null;
+  if (isError) return <div>Failed to load data. Retrying...</div>;
+  if (!data?.data) return null;
+
+  const chartDataList = getChartDataList(data.data, []);
+  if (!chartDataList.length) return <div>No data available</div>;
 
   return (
     <>
-      {data && (
-        <>
-          {chartDataList.map(({ symbol, data, theoData }) => (
-            <EChartToS
-              key={symbol}
-              symbol={symbol}
-              data={data}
-              theoData={theoData}
-              greek={params.greek}
-            />
-          ))}
-        </>
-      )}
+      {chartDataList.map(({ symbol, data, theoData }) => (
+        <EChartToS
+          key={symbol}
+          symbol={symbol}
+          data={data}
+          theoData={theoData}
+          greek={params.greek}
+        />
+      ))}
     </>
   );
 }

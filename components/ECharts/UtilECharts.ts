@@ -16,6 +16,7 @@ export function modify_data(data, greek) {
 }
 
 export function modify_time_data(data, greek) {
+  if (!data || data.length === 0) return { modified_data: [], nonzero_data: [] };
   if (data[0].hasOwnProperty('c_notion_expo')) {
     // Need index in data
 
@@ -261,6 +262,8 @@ export function filterByProperty(data, propertyName, extractProperty, range) {
       obj[propertyName] <= range.max
   );
 
+  if (!dataFilter || dataFilter.length === 0) return [undefined, undefined];
+
   const test = [
     dataFilter[0][`${extractProperty}`],
     dataFilter[dataFilter?.length - 1][`${extractProperty}`],
@@ -294,7 +297,7 @@ export function filterArray(chartData, key, value) {
 }
 
 export function findClosestIndex(arr, value) {
-  console.log(value)
+  console.log(value);
   return arr.reduce((closestIndex, current, index) => {
     const currentDiff = Math.abs(current.strike_price - value);
     const closestDiff = Math.abs(arr[closestIndex].strike_price - value);

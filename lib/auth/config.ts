@@ -51,11 +51,15 @@ export const SESSION_EXPIRED_ERROR_CODES = [
   'auth/user-not-found',
 ] as const;
 
+// Firebase error codes that indicate a transient/retryable failure
+export const TRANSIENT_ERROR_CODES = [
+  'auth/network-request-failed',
+  'auth/too-many-requests',
+] as const;
+
 // Helper functions
 export function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
-  );
+  return PROTECTED_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 }
 
 export function isPublicRoute(pathname: string): boolean {

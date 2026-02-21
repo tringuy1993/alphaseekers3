@@ -1,16 +1,10 @@
 import useSWR from 'swr';
 import axios from 'axios';
-import { signOut } from 'firebase/auth';
 import { Auth } from '@/app/authentication/firebase';
 import { BASE_URL } from './apiURLs';
-import {
-  AUTH_STORAGE_KEYS,
-  SESSION_EXPIRED_ERROR_CODES,
-  TRANSIENT_ERROR_CODES,
-  getLoginUrlWithRedirect,
-} from '@/lib/auth/config';
+import { AUTH_RETRY_STATUS_CODE } from '@/lib/auth/config';
+import { handleSessionExpired, getToken, authHeaders } from './auth-fetch-utils';
 
-// import { saveData, getData } from '../database/database';
 import { truncateVolumeTable, volumeTable } from '@/config/database-config';
 
 const axiosInstance = axios.create({
@@ -18,58 +12,19 @@ const axiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const axiosFetchSave = async (url: string, params: Record<string, any> = {}, options: Record<string, any> = {}, _isRetry = false): Promise<any> => {
+  // Use cached token for initial requests, force-refresh on retry
+  let token = await getToken(_isRetry);
 
-// Handle session expiration by clearing state and redirecting to login
-const handleSessionExpired = async () => {
-  localStorage.removeItem(AUTH_STORAGE_KEYS.tenantInfo);
-  await signOut(Auth);
-  const currentPath = window.location.pathname;
-  window.location.href = getLoginUrlWithRedirect(currentPath);
-};
-
-const axiosFetchSave = async (url, params = {}, options = {}) => {
-  // getIdToken(true) forces a token refresh to prevent expired token errors
-  let token = null;
-  const MAX_RETRIES = 2;
-
-  if (Auth.currentUser) {
-    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-      try {
-        token = await Auth.currentUser.getIdToken(true);
-        break; // success — exit retry loop
-      } catch (tokenError: any) {
-        const errorCode = tokenError?.code;
-
-        // Session is permanently invalid — no point retrying
-        if (SESSION_EXPIRED_ERROR_CODES.includes(errorCode)) {
-          await handleSessionExpired();
-          throw new Error('Session expired. Please sign in again.');
-        }
-
-        // Transient error — retry with backoff
-        if (TRANSIENT_ERROR_CODES.includes(errorCode) && attempt < MAX_RETRIES) {
-          console.warn(
-            `Token refresh failed (attempt ${attempt + 1}/${MAX_RETRIES + 1}):`,
-            errorCode
-          );
-          await delay((attempt + 1) * 1000);
-          continue;
-        }
-
-        // Non-retryable or exhausted retries
-        console.error('Token refresh failed:', tokenError);
-        break;
-      }
+  if (Auth.currentUser && !token) {
+    if (_isRetry) {
+      await handleSessionExpired();
+      throw new Error('Session expired. Please sign in again.');
     }
-
-    // Guard: don't send a doomed unauthenticated request
-    if (!token) {
-      throw new Error('Unable to authenticate. Please try again.');
-    }
+    throw new Error('Unable to authenticate. Please try again.');
   }
 
-  const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+  const headers = authHeaders(token);
 
   try {
     // Check if the volumeTable has any data and if the date matches the parameters
@@ -87,7 +42,7 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
       // Fetch current data status from server for extra validation
       const responseServerDataLength = await axiosInstance.get(url, {
         params: { ...params, check_length: true },
-        headers: authHeaders,
+        headers,
         ...options,
       });
       const serverDataLength = responseServerDataLength.data.data[0]['count'];
@@ -105,7 +60,7 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
 
         const updatedData = await axiosInstance.get(url, {
           params: modParamsDate,
-          headers: authHeaders,
+          headers,
           ...options,
         });
 
@@ -117,11 +72,11 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
       }
     } else {
       if (process.env.NODE_ENV === 'development') console.log('No data in volumeTable or Data is not the right date, fetching from API');
-      await truncateVolumeTable(); // Ensure this function is async or handles the deletion properly
+      await truncateVolumeTable();
 
       const freshData = await axiosInstance.get(url, {
         params,
-        headers: authHeaders,
+        headers,
         ...options,
       });
 
@@ -131,8 +86,12 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
       }
     }
   } catch (error: any) {
-    // 403 with a logged-in user means the token was rejected — treat as session expired
-    if (error.response?.status === 403 && Auth.currentUser) {
+    // On 401: retry the entire function once with a force-refreshed token
+    if (error.response?.status === AUTH_RETRY_STATUS_CODE && Auth.currentUser && !_isRetry) {
+      return axiosFetchSave(url, params, options, true);
+    }
+    // Second 401 on retry — session is truly invalid
+    if (error.response?.status === AUTH_RETRY_STATUS_CODE && _isRetry) {
       await handleSessionExpired();
     }
     console.error('Error in axiosFetchSave:', error);
@@ -140,7 +99,7 @@ const axiosFetchSave = async (url, params = {}, options = {}) => {
   }
 };
 
-function useCustomSWRLocalStorage(url, params = {}, swrOptions = {}) {
+function useCustomSWRLocalStorage(url: string, params = {}, swrOptions = {}) {
   const { data, error, isLoading, ...rest } = useSWR(
     [url, params],
     () => axiosFetchSave(url, params, swrOptions),

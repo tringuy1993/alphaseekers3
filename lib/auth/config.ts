@@ -43,8 +43,11 @@ export const PUBLIC_ROUTES = [
   siteLinks.forgotpassword.href,
 ] as const;
 
-// HTTP status code that triggers token refresh and retry
-export const AUTH_RETRY_STATUS_CODE = 401;
+// HTTP status codes that trigger token refresh and retry
+export const AUTH_RETRY_STATUS_CODES = [401, 403] as const;
+export function isAuthError(status: number | undefined): boolean {
+  return status === 401 || status === 403;
+}
 
 // Firebase error codes that indicate session is invalid
 export const SESSION_EXPIRED_ERROR_CODES = [

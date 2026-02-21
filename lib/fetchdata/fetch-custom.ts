@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { Auth } from '@/app/authentication/firebase';
 import { BASE_URL } from './apiURLs';
-import { AUTH_RETRY_STATUS_CODE } from '@/lib/auth/config';
+import { isAuthError } from '@/lib/auth/config';
 import { handleSessionExpired, getToken, authHeaders } from './auth-fetch-utils';
 
 const axiosInstance = axios.create({
@@ -27,8 +27,8 @@ const axiosFetcher = async (url: string, params = {}, options = {}) => {
     });
     return response.data;
   } catch (error: any) {
-    // On 401: force-refresh the token and retry once
-    if (error.response?.status === AUTH_RETRY_STATUS_CODE && Auth.currentUser) {
+    // On 401/403: force-refresh the token and retry once
+    if (isAuthError(error.response?.status) && Auth.currentUser) {
       token = await getToken(true);
 
       if (!token) {
@@ -44,8 +44,8 @@ const axiosFetcher = async (url: string, params = {}, options = {}) => {
         });
         return retryResponse.data;
       } catch (retryError: any) {
-        // Second 401 — session is truly invalid
-        if (retryError.response?.status === AUTH_RETRY_STATUS_CODE) {
+        // Second 401/403 — session is truly invalid
+        if (isAuthError(retryError.response?.status)) {
           await handleSessionExpired();
         }
         throw retryError.response?.data || retryError.message;

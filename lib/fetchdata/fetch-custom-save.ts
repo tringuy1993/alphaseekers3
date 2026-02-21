@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import axios from 'axios';
 import { Auth } from '@/app/authentication/firebase';
 import { BASE_URL } from './apiURLs';
-import { AUTH_RETRY_STATUS_CODE } from '@/lib/auth/config';
+import { isAuthError } from '@/lib/auth/config';
 import { handleSessionExpired, getToken, authHeaders } from './auth-fetch-utils';
 
 import { truncateVolumeTable, volumeTable } from '@/config/database-config';
@@ -86,12 +86,12 @@ const axiosFetchSave = async (url: string, params: Record<string, any> = {}, opt
       }
     }
   } catch (error: any) {
-    // On 401: retry the entire function once with a force-refreshed token
-    if (error.response?.status === AUTH_RETRY_STATUS_CODE && Auth.currentUser && !_isRetry) {
+    // On 401/403: retry the entire function once with a force-refreshed token
+    if (isAuthError(error.response?.status) && Auth.currentUser && !_isRetry) {
       return axiosFetchSave(url, params, options, true);
     }
-    // Second 401 on retry — session is truly invalid
-    if (error.response?.status === AUTH_RETRY_STATUS_CODE && _isRetry) {
+    // Second 401/403 on retry — session is truly invalid
+    if (isAuthError(error.response?.status) && _isRetry) {
       await handleSessionExpired();
     }
     console.error('Error in axiosFetchSave:', error);

@@ -6,6 +6,12 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 ## Task History
 
+### 2026-02-25
+
+| Date | Time | Task | Status | Branch | Notes |
+|------|------|------|--------|--------|-------|
+| 2026-02-25 | - | Interview Prep: Frontend scripts from project history | Complete | `claude/interview-prep-fullstack-S9S3R` | Created INTERVIEW_PREP_FRONTEND.md mapping codebase to job requirements |
+
 ### 2026-01-21
 
 | Date | Time | Task | Status | Branch | Notes |

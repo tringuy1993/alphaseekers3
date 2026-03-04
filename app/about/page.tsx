@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
-import ProjectAll from './ProjectAll';
+import AboutPage from './AboutPage';
 
 export const metadata: Metadata = {
-  title: 'About Tree',
-  description: 'About Tree',
+  title: 'About | Tri Nguyen - Fullstack Developer',
+  description:
+    'Fullstack developer specializing in real-time financial analytics — Next.js, Django, PostgreSQL, TimescaleDB.',
 };
 
 export default function PageAbout() {
-  return <ProjectAll />;
+  return <AboutPage />;
 }

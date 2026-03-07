@@ -3,6 +3,19 @@
   height: rem(22px);
 }
 
+.toggle {
+  border: 1px solid color-mix(in srgb, var(--as-border) 72%, transparent);
+  background-color: color-mix(in srgb, var(--as-surface-secondary) 72%, transparent);
+  transition:
+    border-color var(--as-motion-fast) var(--as-ease-standard),
+    background-color var(--as-motion-fast) var(--as-ease-standard);
+
+  &:hover {
+    border-color: var(--as-border-hover);
+    background-color: var(--as-surface-tertiary);
+  }
+}
+
 .dark {
   @mixin dark {
     display: none;

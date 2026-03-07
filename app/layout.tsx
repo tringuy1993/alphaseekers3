@@ -1,5 +1,6 @@
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 
 import { theme } from '../theme';
 import MainAppShell from '@/components/MainShell/MainAppShell';
@@ -8,6 +9,19 @@ import { AuthProvider } from './authentication/client-auth-provider';
 import '@mantine/dates/styles.css';
 import 'mantine-react-table/styles.css';
 import '@mantine/core/styles.css';
+import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+});
 
 export const metadata = {
   title: 'Alpha Seekers',
@@ -16,9 +30,9 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: any }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="dark" />
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"
@@ -26,7 +40,7 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>
+        <MantineProvider theme={theme} defaultColorScheme="dark">
           <AuthProvider>
             <MainAppShell>{children}</MainAppShell>
           </AuthProvider>

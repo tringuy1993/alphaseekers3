@@ -1,45 +1,81 @@
 .navbar {
-  /* width: rem(80px); */
-  /* height: 100vh; */
-  padding: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-xs);
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-
-  /* border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)); */
+  gap: 6px;
 }
 
-.navbarMain {
+.section {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  /* flex-direction: column; */
-  /* margin-top: rem(50px); */
+  flex-direction: column;
 }
 
-.mainLink {
-  text-decoration: none;
-  color: inherit;
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--as-border-strong) 48%, transparent) 18%,
+    color-mix(in srgb, var(--as-border-strong) 48%, transparent) 82%,
+    transparent 100%
+  );
+  margin: var(--mantine-spacing-xs) 0;
 }
 
 .link {
-  width: rem(50px);
-  height: rem(50px);
-  border-radius: var(--mantine-radius-md);
+  width: rem(36px);
+  height: rem(36px);
+  border-radius: var(--mantine-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  color: var(--as-text-secondary);
+  position: relative;
+  transition:
+    background-color var(--as-motion-fast) var(--as-ease-standard),
+    color var(--as-motion-fast) var(--as-ease-standard),
+    box-shadow var(--as-motion-fast) var(--as-ease-standard);
+
+  &[data-expanded] {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0 var(--mantine-spacing-sm) 0 calc(var(--mantine-spacing-sm) + 2px);
+  }
 
   &:hover {
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+    background-color: var(--as-surface-tertiary);
+    color: var(--as-text-primary);
   }
 
   &[data-active] {
-    &,
-    &:hover {
-      background-color: var(--mantine-color-blue-light);
-      color: var(--mantine-color-blue-light-color);
+    color: var(--as-blue);
+    background-color: color-mix(in srgb, var(--as-surface-elevated) 86%, transparent);
+    box-shadow: var(--as-glow-accent);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 25%;
+      height: 50%;
+      width: 3px;
+      border-radius: 0 2px 2px 0;
+      background-color: var(--as-blue);
+      box-shadow: 0 0 12px rgba(61, 125, 255, 0.65);
+    }
+
+    &[data-expanded]::before {
+      left: 0;
+      height: 60%;
+      top: 20%;
     }
   }
+}
+
+.linkLabel {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
 }

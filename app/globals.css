@@ -1,0 +1,172 @@
+/* AlphaSeekers Global Styles - Command Center v2 */
+
+[data-mantine-color-scheme='dark'] {
+  --as-surface-primary: #131722;
+  --as-surface-secondary: #1e222d;
+  --as-surface-tertiary: #242a35;
+  --as-surface-elevated: #2d3442;
+  --as-surface-overlay: #10141ebf;
+
+  --as-text-primary: #d8dde7;
+  --as-text-secondary: #9aa3b5;
+  --as-text-muted: #63708a;
+
+  --as-blue: #3d7dff;
+  --as-amber: #ffb02e;
+  --as-cyan: #31c6d4;
+  --as-positive: #26a69a;
+  --as-negative: #ef5350;
+  --as-neutral: #8e97aa;
+
+  --as-border: #2b3342;
+  --as-border-hover: #384256;
+  --as-border-active: #3d7dff;
+  --as-border-strong: #4b5b77;
+
+  --as-focus-ring: #3d7dff4d;
+  --as-live: #26a69a;
+  --as-warning: #ffb02e;
+  --as-critical: #ef5350;
+
+  --as-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.2);
+  --as-shadow-md: 0 10px 28px rgba(0, 0, 0, 0.26);
+  --as-shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.34);
+
+  --as-glow-accent: 0 0 0 1px rgba(61, 125, 255, 0.28), 0 10px 24px rgba(61, 125, 255, 0.18);
+}
+
+[data-mantine-color-scheme='light'] {
+  --as-surface-primary: #fff;
+  --as-surface-secondary: #f8f9fa;
+  --as-surface-tertiary: #edf1f7;
+  --as-surface-elevated: #fff;
+  --as-surface-overlay: #fffc;
+
+  --as-text-primary: #121826;
+  --as-text-secondary: #4f5b73;
+  --as-text-muted: #7f8aa2;
+
+  --as-blue: #3d7dff;
+  --as-amber: #e49100;
+  --as-cyan: #0f9ca9;
+  --as-positive: #058c80;
+  --as-negative: #d14542;
+  --as-neutral: #67758f;
+
+  --as-border: #dce3ef;
+  --as-border-hover: #cfd8e8;
+  --as-border-active: #3d7dff;
+  --as-border-strong: #8a9cb8;
+
+  --as-focus-ring: #3d7dff33;
+  --as-live: #058c80;
+  --as-warning: #e49100;
+  --as-critical: #d14542;
+
+  --as-shadow-sm: 0 4px 14px rgba(18, 24, 38, 0.08);
+  --as-shadow-md: 0 10px 26px rgba(18, 24, 38, 0.12);
+  --as-shadow-lg: 0 16px 34px rgba(18, 24, 38, 0.16);
+
+  --as-glow-accent: 0 0 0 1px rgba(61, 125, 255, 0.2), 0 8px 20px rgba(61, 125, 255, 0.14);
+}
+
+:root {
+  --as-density-control-h: 30px;
+  --as-density-gap: 10px;
+  --as-density-font: 13px;
+
+  --as-layout-page-padding-x: 24px;
+  --as-layout-page-padding-y: 16px;
+  --as-layout-section-gap: 12px;
+  --as-layout-panel-gap: 12px;
+  --as-layout-hero-min-h: 420px;
+  --as-layout-support-min-h: 280px;
+  --as-layout-rail-w: 300px;
+  --as-layout-metric-h: 68px;
+  --as-layout-sticky-top: 56px;
+
+  --as-motion-fast: 120ms;
+  --as-motion-normal: 180ms;
+  --as-motion-slow: 260ms;
+  --as-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Compatibility aliases for existing UI usage */
+[data-mantine-color-scheme='dark'],
+[data-mantine-color-scheme='light'] {
+  --as-bg-primary: var(--as-surface-primary);
+  --as-bg-secondary: var(--as-surface-secondary);
+  --as-bg-tertiary: var(--as-surface-tertiary);
+  --as-bg-elevated: var(--as-surface-elevated);
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% -20%, rgba(61, 125, 255, 0.12), transparent 35%),
+    radial-gradient(circle at 90% 120%, rgba(255, 176, 46, 0.12), transparent 35%),
+    var(--as-surface-primary);
+  color: var(--as-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mono-num {
+  font-family: var(--mantine-font-family-monospace);
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 2px var(--as-focus-ring);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--as-surface-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--as-surface-elevated);
+  border: 1px solid var(--as-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--as-border-hover);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--as-surface-elevated) var(--as-surface-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  :root {
+    --as-layout-page-padding-x: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --as-layout-page-padding-x: 16px;
+    --as-layout-page-padding-y: 12px;
+    --as-layout-hero-min-h: 320px;
+    --as-layout-support-min-h: 220px;
+    --as-layout-sticky-top: 52px;
+  }
+}

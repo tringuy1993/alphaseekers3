@@ -1,0 +1,53 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--as-layout-panel-gap, var(--mantine-spacing-sm));
+}
+
+.card {
+  min-height: var(--as-layout-metric-h, 68px);
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--as-border) 76%, transparent);
+  border-radius: var(--mantine-radius-md);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--as-surface-secondary) 96%, transparent) 0%, color-mix(in srgb, var(--as-surface-tertiary) 88%, transparent) 100%);
+  box-shadow: var(--as-shadow-sm);
+}
+
+.label {
+  color: var(--as-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.value {
+  margin-top: 6px;
+  color: var(--as-text-primary);
+  font-family: var(--mantine-font-family-monospace);
+  font-size: clamp(1rem, 0.88rem + 0.4vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  margin-top: 4px;
+  color: var(--as-text-secondary);
+}
+
+.value[data-tone='positive'],
+.value[data-tone='live'] {
+  color: var(--as-live);
+}
+
+.value[data-tone='negative'] {
+  color: var(--as-negative);
+}
+
+.value[data-tone='warn'] {
+  color: var(--as-warning);
+}
+
+.value[data-tone='neutral'] {
+  color: var(--as-text-primary);
+}

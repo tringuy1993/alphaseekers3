@@ -1,0 +1,22 @@
+.trigger {
+  border-color: var(--as-border);
+  background-color: var(--as-surface-secondary);
+  color: var(--as-text-primary);
+  min-width: 238px;
+}
+
+.dropdown {
+  border: 1px solid var(--as-border);
+  background: linear-gradient(180deg, var(--as-surface-secondary) 0%, var(--as-surface-tertiary) 100%);
+  box-shadow: var(--as-shadow-md);
+}
+
+.presetGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mantine-spacing-xs);
+}
+
+.presetButton {
+  justify-content: center;
+}

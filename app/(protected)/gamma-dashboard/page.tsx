@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Box, Group, SegmentedControl, Select, Text, Paper, Stack, Grid, Center, Loader } from '@mantine/core';
+import { Badge, Box, Grid, Group, SegmentedControl, Skeleton, Stack, Text } from '@mantine/core';
 
 import useCustomSWR from '@/lib/fetchdata/fetch-custom';
 import {
@@ -14,7 +14,8 @@ import {
   EChartGammaHeatmap,
   EChartGammaLevels,
 } from '@/components/ECharts/GammaDashboard';
-import CustomCard from '@/components/CustomCard/CustomCard';
+import { AnalyticsPageHeader, DataPanel, FilterBar, MetricStrip } from '@/components/Layout';
+import SelectWrapper from '@/components/SelectWrapper';
 
 const EXP_FILTER_OPTIONS = [
   { label: '0DTE', value: '0dte' },
@@ -48,7 +49,7 @@ export default function GammaDashboardPage() {
 
   // Fetch available expirations (only when we have a valid date)
   const { data: expData } = useCustomSWR(
-    selectedDate ? GAMMA_DASHBOARD_EXPIRATIONS_URL : null,
+    selectedDate ? GAMMA_DASHBOARD_EXPIRATIONS_URL : (null as unknown as string),
     selectedDate ? { und_symbol: ticker, date: selectedDate } : {}
   );
   const expOptions =
@@ -78,33 +79,37 @@ export default function GammaDashboardPage() {
   } : null;
 
   const effectiveExpFilter = specificExp ? 'custom' : expFilter;
+  const snapshotLabel = selectedDate || 'Loading snapshot';
+  const expirationLabel = specificExp || EXP_FILTER_OPTIONS.find((option) => option.value === expFilter)?.label || '0DTE';
 
-  return (
-    <Box className="p-2 max-w-full mx-auto">
-      <Text size="xl" fw={700} className="text-center mb-2">
-        Gamma Dashboard
-      </Text>
-
-      <Paper shadow="sm" p="sm" mb="sm" withBorder>
-        <Group grow>
-          <Select
+  const filterControls = (
+    <FilterBar
+      contextSlot={
+        <Group gap="sm">
+          <SelectWrapper
             label="Underlying"
             data={tickerOptions}
             value={ticker}
             onChange={(val) => val && setTicker(val)}
             searchable
-            size="sm"
+            size="xs"
+            miw={160}
           />
-          <Select
-            label="Trade Date"
+          <SelectWrapper
+            label="Date"
             data={dateOptions}
             value={selectedDate}
             onChange={(val) => val && setSelectedDate(val)}
             searchable
-            size="sm"
+            size="xs"
+            miw={170}
           />
+        </Group>
+      }
+      viewSlot={
+        <Group gap="sm" align="end">
           <Box>
-            <Text size="sm" fw={500} mb={4}>
+            <Text size="xs" c="var(--as-text-secondary)" mb={2}>
               Expiration
             </Text>
             <SegmentedControl
@@ -117,9 +122,10 @@ export default function GammaDashboardPage() {
               }}
               data={[...EXP_FILTER_OPTIONS, { label: 'Custom', value: 'custom' }]}
               size="xs"
+              styles={{ root: { backgroundColor: 'var(--as-bg-tertiary)' } }}
             />
           </Box>
-          <Select
+          <SelectWrapper
             label="Specific Exp"
             data={expOptions}
             value={specificExp}
@@ -127,38 +133,104 @@ export default function GammaDashboardPage() {
             placeholder="Select expiration"
             clearable
             disabled={effectiveExpFilter !== 'custom'}
-            size="sm"
+            size="xs"
+            miw={200}
           />
         </Group>
-      </Paper>
+      }
+      summarySlot={
+        <Group gap="xs">
+          <Badge variant="light" color="brand">
+            Snapshot: {snapshotLabel}
+          </Badge>
+          <Badge variant="light" color="accent">
+            {specificExp ? 'Custom expiration' : expirationLabel}
+          </Badge>
+        </Group>
+      }
+    />
+  );
 
-      {/* Main Layout: Levels on left, Heatmap + Time Series on right */}
-      {!chartParams || datesLoading ? (
-        <Center h={400}>
-          <Loader size="xl" />
-        </Center>
-      ) : (
-        <Grid gutter="sm">
-          {/* Left: Gamma Levels by Strike (horizontal bars) */}
-          <Grid.Col span={{ base: 12, lg: 4 }}>
-            <CustomCard>
+  return (
+    <Stack gap="md">
+      <AnalyticsPageHeader
+        eyebrow="Market Map"
+        title="Gamma Dashboard"
+        subtitle={`Snapshot view for ${ticker} on ${snapshotLabel} using ${specificExp ? `custom expiration ${specificExp}` : expirationLabel}.`}
+        status={{ label: specificExp ? 'Custom Expiration' : 'Saved Snapshot', tone: specificExp ? 'warn' : 'muted' }}
+        meta={[
+          { label: 'Underlying', value: ticker },
+          { label: 'Snapshot', value: snapshotLabel },
+          { label: 'Expiration', value: expirationLabel },
+          { label: 'Choices', value: expOptions.length ? `${expOptions.length} expiries` : 'Loading list' },
+        ]}
+      />
+
+      <DataPanel controls={filterControls} stickyHeader variant="elevated" />
+
+      <MetricStrip
+        items={[
+          { label: 'Underlying', value: ticker, hint: 'Current dashboard symbol' },
+          { label: 'Snapshot', value: snapshotLabel, hint: 'Saved dashboard date' },
+          { label: 'View', value: 'Heatmap + ladder', tone: 'live', hint: 'Market-map template' },
+          { label: 'Expiration', value: expirationLabel, tone: specificExp ? 'warn' : 'neutral', hint: specificExp ? 'Manual override active' : 'Preset bucket active' },
+          { label: 'Expiries', value: expOptions.length ? expOptions.length : '--', hint: 'Custom menu availability' },
+        ]}
+      />
+
+      <Grid gutter="md">
+        <Grid.Col span={{ base: 12, lg: 4 }}>
+          <DataPanel
+            eyebrow="Context Rail"
+            title="Levels by strike"
+            subtitle="Narrow reference rail for locating concentration before using the heatmap."
+            variant="elevated"
+          >
+            {chartParams && !datesLoading ? (
               <EChartGammaLevels params={chartParams} />
-            </CustomCard>
-          </Grid.Col>
+            ) : (
+              <PanelSkeleton height={420} />
+            )}
+          </DataPanel>
+        </Grid.Col>
 
-          {/* Right: Heatmap on top, Time Series on bottom */}
-          <Grid.Col span={{ base: 12, lg: 8 }}>
-            <Stack gap="sm">
-              <CustomCard>
-                <EChartGammaHeatmap params={chartParams} />
-              </CustomCard>
-              <CustomCard>
-                <EChartGammaTimeSeries params={chartParams} />
-              </CustomCard>
-            </Stack>
-          </Grid.Col>
-        </Grid>
-      )}
-    </Box>
+        <Grid.Col span={{ base: 12, lg: 8 }}>
+          <DataPanel
+            eyebrow="Primary Surface"
+            title="Gamma heatmap"
+            subtitle="Dominant surface for identifying where exposure thickens or thins across strikes and expirations."
+            variant="hero"
+          >
+            {chartParams && !datesLoading ? (
+              <EChartGammaHeatmap params={chartParams} />
+            ) : (
+              <PanelSkeleton height={460} />
+            )}
+          </DataPanel>
+        </Grid.Col>
+      </Grid>
+
+      <DataPanel
+        title="Time series follow-through"
+        subtitle="Use the trend line after the heatmap to confirm whether concentration is holding, accelerating, or fading."
+        variant="elevated"
+      >
+        {chartParams && !datesLoading ? (
+          <EChartGammaTimeSeries params={chartParams} />
+        ) : (
+          <PanelSkeleton height={320} />
+        )}
+      </DataPanel>
+    </Stack>
+  );
+}
+
+function PanelSkeleton({ height }: { height: number }) {
+  return (
+    <Stack gap="sm">
+      <Skeleton height={height} radius="sm" />
+      <Skeleton height={14} width="40%" radius="xl" />
+      <Skeleton height={10} width="72%" radius="xl" />
+    </Stack>
   );
 }

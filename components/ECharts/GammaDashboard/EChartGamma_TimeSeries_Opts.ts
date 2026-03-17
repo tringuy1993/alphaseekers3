@@ -1,4 +1,5 @@
 import { formatNumbers } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 interface TimeSeriesDataPoint {
   saved_datetime: string;
@@ -24,8 +25,8 @@ export function EChartGamma_TimeSeries_Opts(chartData: TimeSeriesDataPoint[]) {
   const spotPriceMax = maxSpotPrice * 1.005;
 
   const colors = {
-    total: '#ffd43b', // Yellow for total gamma (matches SpotGamma style)
-    spot: '#74c0fc', // Light blue for spot price line
+    total: CHART_COLORS.amber,
+    spot: CHART_COLORS.call,
   };
 
   return {
@@ -109,8 +110,8 @@ export function EChartGamma_TimeSeries_Opts(chartData: TimeSeriesDataPoint[]) {
             x2: 0,
             y2: 1,
             colorStops: [
-              { offset: 0, color: 'rgba(255, 212, 59, 0.4)' },
-              { offset: 1, color: 'rgba(255, 212, 59, 0.05)' },
+              { offset: 0, color: 'rgba(234, 159, 30, 0.4)' },
+              { offset: 1, color: 'rgba(234, 159, 30, 0.05)' },
             ],
           },
         },

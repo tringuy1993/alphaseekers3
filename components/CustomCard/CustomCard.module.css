@@ -1,7 +1,14 @@
 .customCard {
-  cursor: pointer;
+  background: linear-gradient(180deg, var(--as-surface-secondary) 0%, var(--as-surface-tertiary) 100%);
+  border-color: var(--as-border);
+  transition:
+    transform var(--as-motion-fast) var(--as-ease-standard),
+    border-color var(--as-motion-fast) var(--as-ease-standard),
+    box-shadow var(--as-motion-normal) var(--as-ease-standard);
 }
 
 .customCard:hover {
-  background-color: red; /* Replace with the hex value of Mantine's secondary color */
+  border-color: var(--as-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--as-shadow-sm);
 }

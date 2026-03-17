@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useForm } from '@mantine/form';
-import { Button, Group, TextInput } from '@mantine/core';
+import { Button, Group, TextInput, Stack, Text } from '@mantine/core';
 
 import { db } from '@/app/authentication/firebase';
 import { useAuth } from '@/app/authentication/context';
 import SelectWrapper from '@/components/SelectWrapper';
+import classes from './profile.module.css';
 
 const languages = [
   { label: 'English', value: 'en' },
@@ -111,26 +112,33 @@ export function UserProfileUpdate() {
   });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextInput
-        label={accountINFO[0].label}
-        placeholder={accountINFO[0].placeHolder}
-        {...form.getInputProps(accountINFO[0].name)}
-      />
-      <TextInput
-        label={accountINFO[1].label}
-        placeholder={accountINFO[1].placeHolder}
-        {...form.getInputProps(accountINFO[1].name)}
-      />
-      <SelectWrapper
-        data={languages}
-        label="Language"
-        value={form.values.language}
-        onChange={(value: string) => form.setFieldValue('language', value)}
-      />
+    <form onSubmit={handleSubmit} className={classes.formShell}>
+      <Text className={classes.helperText}>
+        Keep your profile info current for account personalization.
+      </Text>
+      <Stack gap="xs">
+        <TextInput
+          label={accountINFO[0].label}
+          placeholder={accountINFO[0].placeHolder}
+          size="xs"
+          {...form.getInputProps(accountINFO[0].name)}
+        />
+        <TextInput
+          label={accountINFO[1].label}
+          placeholder={accountINFO[1].placeHolder}
+          size="xs"
+          {...form.getInputProps(accountINFO[1].name)}
+        />
+        <SelectWrapper
+          data={languages}
+          label="Language"
+          value={form.values.language}
+          onChange={(value: string | null) => form.setFieldValue('language', value || 'en')}
+        />
+      </Stack>
 
       <Group justify="flex-end" mt="md">
-        <Button type="submit" disabled={loadingUpdateProfile}>
+        <Button type="submit" disabled={loadingUpdateProfile} loading={loadingUpdateProfile}>
           Update Profile
         </Button>
       </Group>

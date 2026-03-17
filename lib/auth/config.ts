@@ -5,7 +5,7 @@
  * Import from here instead of hardcoding values across the codebase.
  */
 
-import { siteLinks } from '@/config/site';
+import { siteLinks, authorizedLinksList } from '@/config/site';
 
 // Storage keys - used for localStorage
 export const AUTH_STORAGE_KEYS = {
@@ -25,13 +25,7 @@ export const AUTH_ROUTES = {
 } as const;
 
 // Protected routes (require authentication)
-export const PROTECTED_ROUTES = [
-  siteLinks.optionsdata.href,
-  siteLinks.backtest.href,
-  siteLinks.optionstime.href,
-  siteLinks.gammadashboard.href,
-  siteLinks.profile.href,
-] as const;
+export const PROTECTED_ROUTES = authorizedLinksList;
 
 // Public routes (no authentication required)
 export const PUBLIC_ROUTES = [

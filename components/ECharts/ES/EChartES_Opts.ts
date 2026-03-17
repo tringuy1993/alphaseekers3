@@ -1,12 +1,13 @@
 /* eslint-disable */
 import { formatNumbers, datasets, commonOptions } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 export function EChartES_Opts(symbol, chartData) {
   // Setting dimensions and get 'dataset' for Echarts
   const SGdimensions = ['strike', 'c_notion_expo', 'p_notion_expo', 'total_notional_exposure'];
   const dataset = datasets(chartData, [], SGdimensions, []);
   const legends = ['$Call', '$Put', '$Total'];
-  const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.total, CHART_COLORS.theo];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
     {
@@ -46,7 +47,7 @@ export function EChartES_Opts(symbol, chartData) {
       {
         text: `${symbol} Sum: ${SumTotalGEX}`,
         left: 'center',
-        textStyle: { fontSize: 30 },
+        textStyle: { fontSize: 18 },
       },
     ],
     ...commonOptions,
@@ -99,7 +100,7 @@ export const ECOpts_ES_VolOI = (symbol, chartData) => {
   const patterns = ['none', 'none', 'rect', 'rect'];
   const legends = ['COI', 'POI', 'CVolume', 'PVolume'];
   // const colors = ["#Ff0d00", "#0066ff", "#Ff3400", "#0052ff"];
-  const colors = ['#e01f54', '#0098d9', '#e01f54', '#0098d9'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.call, CHART_COLORS.put];
 
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   let series = [

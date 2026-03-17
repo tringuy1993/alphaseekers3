@@ -9,10 +9,12 @@ import { uDateType } from './types';
 type SelectUDateProps = {
   uTicker: string;
   onDefaultDateChange: (date: string) => void;
+  size?: string;
 };
 
-export function SelectUDate({ uTicker, onDefaultDateChange }: SelectUDateProps) {
+export function SelectUDate({ uTicker, onDefaultDateChange, size }: SelectUDateProps) {
   const [selectedDate, setSelectedDate] = useState('');
+// ... rest of component ...
   const { data: uDateData, isLoading } = useCustomSWR(LIVE_OTM_DATES, {
     und_symbol: uTicker,
   });
@@ -43,10 +45,16 @@ export function SelectUDate({ uTicker, onDefaultDateChange }: SelectUDateProps) 
 
   return (
     <SelectWrapper
-      label="Select Date"
+      label="Date"
       data={dateData}
       value={selectedDate} // Use value instead of defaultValue for controlled component
-      onChange={handleDateChange} // Use onChange event handler
+      onChange={(value: string | null) => {
+        if (value) {
+          handleDateChange(value);
+        }
+      }}
+      size={size}
+      miw={220}
     />
   );
 }

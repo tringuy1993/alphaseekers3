@@ -1,12 +1,13 @@
 /* eslint-disable */
 import { formatNumbers, datasets, commonOptions } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 export function EChart0DTE_ExpoGreek_Opts(chartData, greek) {
   // Setting dimensions and get 'dataset' for Echarts
   const SGdimensions = ['saved_datetime', 'total_notional_exposure', 'c_notional_exposure', 'p_notional_exposure',];
   const dataset = datasets(chartData, [], SGdimensions, []);
   const legends = ['Total Notional', 'C_Notional', 'P_Notional'];
-  const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
+  const colors = [CHART_COLORS.total, CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.theo];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
     {
@@ -40,7 +41,7 @@ export function EChart0DTE_ExpoGreek_Opts(chartData, greek) {
       {
         text: `${greek}`,
         left: "center",
-        textStyle: { fontSize: 30 },
+        textStyle: { fontSize: 18 },
       },
     ],
     

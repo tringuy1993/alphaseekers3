@@ -8,9 +8,10 @@ import { uTickerType } from './types';
 type SelectUtickerProps = {
   uTicker: string;
   setUTicker: (ticker: string) => void;
+  size?: string;
 };
 
-export function SelectUticker({ uTicker, setUTicker }: SelectUtickerProps) {
+export function SelectUticker({ uTicker, setUTicker, size }: SelectUtickerProps) {
   const { data: uTickerList, isLoading } = useCustomSWR(LIVE_OTM_UTICKERS);
 
   if (!uTickerList || isLoading) {
@@ -24,10 +25,16 @@ export function SelectUticker({ uTicker, setUTicker }: SelectUtickerProps) {
 
   return (
     <SelectWrapper
-      label="Select Your Ticker"
+      label="Ticker"
       data={convertedArray}
       value={uTicker}
-      onChange={(e: string) => setUTicker(e)}
+      onChange={(e: string | null) => {
+        if (e) {
+          setUTicker(e);
+        }
+      }}
+      size={size}
+      miw={180}
     />
   );
 }

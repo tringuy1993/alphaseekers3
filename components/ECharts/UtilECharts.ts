@@ -183,7 +183,6 @@ export const convertToKeyArray = (array) =>
 export const commonOptions = {
   tooltip: {
     trigger: 'axis',
-    backgroundColor: 'transparent',
     hideDelay: 1500,
     confine: true,
     axisPointer: {
@@ -199,11 +198,6 @@ export const commonOptions = {
       return obj;
     },
   },
-  // axisPointer: {
-  //   link: { xAxisIndex: 'all' },
-  //   label: { backgroundColor: '#777' },
-  // },
-  backgroundColor: 'transparent',
   legend: { left: 50, bottom: 65 },
   toolbox: {
     feature: {

@@ -5,6 +5,7 @@ import {
   findClosestIndex,
   createXMarkLineData,
 } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 function findClosestIndexBT(list, target) {
   return list.reduce(
@@ -23,7 +24,7 @@ export function ECOpts_Theo_BT(chartData, greek) {
     source: chartData,
   };
   const legends = ['$Call', '$Put'];
-  const colors = ['#e01f54', '#0098d9'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
     {
@@ -43,7 +44,7 @@ export function ECOpts_Theo_BT(chartData, greek) {
       {
         // text: ` ${greek} Sum: ${SumTotalGEX}`,
         left: 'center',
-        textStyle: { fontSize: 30 },
+        textStyle: { fontSize: 18 },
       },
     ],
     ...commonOptions,
@@ -100,7 +101,7 @@ export function ECOpts_BT(chartData, greek) {
     source: chartData,
   };
   const legends = ['$Call', '$Put', '$Total'];
-  const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.total, CHART_COLORS.theo];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
 
   const closestCurrentIndex = {
@@ -139,7 +140,7 @@ export function ECOpts_BT(chartData, greek) {
   series[0].markLine = {
     symbol: ['none'],
     silent: false,
-    data: [createXMarkLineData('x', closestCurrentIndex, 'green', 'green', 'start')],
+    data: [createXMarkLineData('x', closestCurrentIndex, CHART_COLORS.close, CHART_COLORS.close, 'start')],
   };
 
   // Creating Option for the chart.
@@ -151,7 +152,7 @@ export function ECOpts_BT(chartData, greek) {
       {
         text: ` ${greek} Sum: ${SumTotalGEX}`,
         left: 'center',
-        textStyle: { fontSize: 30 },
+        textStyle: { fontSize: 18 },
       },
     ],
     ...commonOptions,
@@ -204,7 +205,7 @@ export const ECOpts_BT_VolOI = (chartData) => {
   const patterns = ['none', 'none', 'rect', 'rect'];
   const legends = ['COI', 'POI', 'CVolume', 'PVolume'];
   // const colors = ["#Ff0d00", "#0066ff", "#Ff3400", "#0052ff"];
-  const colors = ['#e01f54', '#0098d9', '#e01f54', '#0098d9'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.call, CHART_COLORS.put];
 
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   let series = [

@@ -36,6 +36,7 @@
 
 .hiddenMenu {
   display: none;
+
   @media (max-width: $mantine-breakpoint-md) {
     display: inline;
   }

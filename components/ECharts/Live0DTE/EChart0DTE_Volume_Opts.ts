@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { formatNumbers, datasets, commonOptions, getMinMax } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 function findClosestIndex(array, target) {
   let closestIndex = 0; // Default to the first element if nothing else is closer
@@ -150,7 +151,7 @@ export function EChart0DTE_Volume_Opts(chartData) {
         axisLine: {
           show: true,
           lineStyle: {
-            color: 'blue'
+            color: CHART_COLORS.call
           }
         },
         axisLabel: {
@@ -174,11 +175,7 @@ export function EChart0DTE_Volume_Opts(chartData) {
         left: 'center',
         bottom: '5%',
         inRange: {
-          color: [
-            'rgba(0, 255, 0, 0.7)', // Green with 50% transparency
-            'rgba(0, 0, 255, 0.7)', // Blue with 50% transparency
-              
-          ]
+          color: CHART_COLORS.volumePutHeatmap,
         },
         zlevel: 100,
         z: 100,
@@ -194,10 +191,7 @@ export function EChart0DTE_Volume_Opts(chartData) {
         left: 'center',
         bottom: '15%',
         inRange: {
-          color: [
-            'rgba(255, 255, 0, 0.3)', // Yellow with 50% transparency
-            'rgba(255, 0, 0, 0.3)'    // Red with 50% transparency
-          ]
+          color: CHART_COLORS.volumeCallHeatmap,
         },
         zlevel: 100,
         z: 100,
@@ -245,7 +239,7 @@ export function EChart0DTE_Volume_Opts(chartData) {
         type: 'line',
         data: last_price,
         lineStyle: {
-          color: 'blue'
+          color: CHART_COLORS.call
         },
         xAxisIndex:0,
         yAxisIndex:1,

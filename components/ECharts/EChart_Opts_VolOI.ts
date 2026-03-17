@@ -5,6 +5,7 @@ import {
   createXMarkLineData,
   commonOptions,
 } from './UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 export const EChart_Opts_VolOI = (symbol, chartData) => {
   // Setting dimensions and get 'dataset' for Echarts
@@ -30,7 +31,7 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
   const patterns = ['none', 'none', 'rect', 'rect'];
   const legends = ['COI', 'POI', 'CVolume', 'PVolume'];
   // const colors = ["#Ff0d00", "#0066ff", "#Ff3400", "#0052ff"];
-  const colors = ['#e01f54', '#0098d9', '#e01f54', '#0098d9'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.call, CHART_COLORS.put];
 
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
@@ -84,8 +85,8 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
     symbol: ['none', 'none'],
     silent: false,
     data: [
-      createXMarkLineData('x', closestLastIndex2, 'green', 'green', 'start'),
-      createXMarkLineData('x', closestOpenIndex2, 'red', 'red', 'start'),
+      createXMarkLineData('x', closestLastIndex2, CHART_COLORS.close, CHART_COLORS.close, 'start'),
+      createXMarkLineData('x', closestOpenIndex2, CHART_COLORS.open, CHART_COLORS.open, 'start'),
     ],
   };
 
@@ -94,8 +95,8 @@ export const EChart_Opts_VolOI = (symbol, chartData) => {
     symbol: ['none', 'none'],
     silent: false,
     data: [
-      createXMarkLineData('x', closestLastIndex2, 'green', 'green', 'start'),
-      createXMarkLineData('x', closestOpenIndex2, 'red', 'red', 'start'),
+      createXMarkLineData('x', closestLastIndex2, CHART_COLORS.close, CHART_COLORS.close, 'start'),
+      createXMarkLineData('x', closestOpenIndex2, CHART_COLORS.open, CHART_COLORS.open, 'start'),
     ],
   };
 

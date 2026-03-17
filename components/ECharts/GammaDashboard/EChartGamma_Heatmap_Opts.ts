@@ -1,4 +1,5 @@
 import { formatNumbers } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 interface HeatmapDataPoint {
   saved_datetime: string;
@@ -115,19 +116,7 @@ export function EChartGamma_Heatmap_Opts(chartData: HeatmapDataPoint[]) {
       top: 'center',
       itemHeight: 200,
       inRange: {
-        color: [
-          '#67001f', // Dark red (negative)
-          '#b2182b',
-          '#d6604d',
-          '#f4a582',
-          '#fddbc7',
-          '#f7f7f7', // White (zero)
-          '#d1e5f0',
-          '#92c5de',
-          '#4393c3',
-          '#2166ac',
-          '#053061', // Dark blue (positive)
-        ],
+        color: CHART_COLORS.gammaHeatmap,
       },
     },
     series: [
@@ -144,12 +133,12 @@ export function EChartGamma_Heatmap_Opts(chartData: HeatmapDataPoint[]) {
             ? {
                 silent: true,
                 symbol: 'none',
-                lineStyle: { color: '#ffd43b', width: 2, type: 'solid' },
+                lineStyle: { color: CHART_COLORS.spot, width: 2, type: 'solid' },
                 data: [{ yAxis: spotIndex }],
                 label: {
                   formatter: `Spot: ${currentSpotPrice.toFixed(0)}`,
                   position: 'end',
-                  color: '#ffd43b',
+                  color: CHART_COLORS.spot,
                   fontWeight: 'bold',
                 },
               }

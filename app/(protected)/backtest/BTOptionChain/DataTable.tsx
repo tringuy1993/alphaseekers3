@@ -11,19 +11,33 @@ type PutCallData = {
 };
 
 const renderPutITM = ({ cell, row }, colorScheme) => {
-  const otm_put = (row.original.put.delta as number) < -0.5;
+  const itm_put = (row.original.put.delta as number) < -0.5;
   const boxStyle = {
-    backgroundColor: otm_put ? (colorScheme === 'dark' ? 'darkblue' : 'lightblue') : 'transparent', // Change 'transparent' to any other color if needed
+    backgroundColor: itm_put ? 'rgba(239, 83, 80, 0.15)' : 'transparent',
+    color: itm_put ? 'var(--as-negative)' : 'inherit',
+    fontWeight: itm_put ? 600 : 400,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   };
-  return <Text style={boxStyle}>{cell.getValue()}</Text>;
+  return <Text size="xs" ff="monospace" className="mono-num" style={boxStyle}>{cell.getValue()}</Text>;
 };
 
 const renderCallITM = ({ cell, row }, colorScheme) => {
   const itm_call = (row.original.call.delta as number) > 0.5;
   const boxStyle = {
-    backgroundColor: itm_call ? (colorScheme === 'dark' ? 'darkblue' : 'lightblue') : 'transparent', // Change 'transparent' to any other color if needed
+    backgroundColor: itm_call ? 'rgba(41, 98, 255, 0.15)' : 'transparent',
+    color: itm_call ? 'var(--as-blue)' : 'inherit',
+    fontWeight: itm_call ? 600 : 400,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   };
-  return <Text style={boxStyle}>{cell.getValue()}</Text>;
+  return <Text size="xs" ff="monospace" className="mono-num" style={boxStyle}>{cell.getValue()}</Text>;
 };
 
 const groupedCellRender = ({ cell, row }) => (
@@ -67,8 +81,13 @@ const useColumns = (colorScheme: MantineColorScheme) =>
         filterVariant: 'range-slider',
         minSize: 50,
         maxSize: 100,
+        Cell: ({ cell }) => (
+          <Text size="xs" ff="monospace" className="mono-num" fw={700} c="var(--as-amber)">
+            {cell.getValue() as number}
+          </Text>
+        ),
         mantineFilterRangeSliderProps: {
-          color: 'indigo',
+          color: 'orange',
           label: (value) =>
             value?.toLocaleString?.('en-US', {
               style: 'currency',

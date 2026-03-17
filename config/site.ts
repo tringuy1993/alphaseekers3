@@ -22,8 +22,13 @@ export const siteLinks = {
   register: { title: 'Register', href: '/authentication/register' },
 };
 
-// Re-export from centralized auth config for backwards compatibility
-// New code should import directly from '@/lib/auth/config'
-export { PROTECTED_ROUTES as authorizedLinksList } from '@/lib/auth/config';
+// Protected routes (require authentication)
+export const authorizedLinksList = [
+  siteLinks.optionsdata.href,
+  siteLinks.backtest.href,
+  siteLinks.optionstime.href,
+  siteLinks.gammadashboard.href,
+  siteLinks.profile.href,
+] as const;
 
 export type Siteconfig = typeof siteConfig;

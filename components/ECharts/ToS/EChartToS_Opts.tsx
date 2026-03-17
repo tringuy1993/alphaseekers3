@@ -8,6 +8,7 @@ import {
   createXMarkLineData,
   commonOptions,
 } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 export const EChartToS_Opts = (symbol, chartData, theoData) => {
   // Setting dimensions and get 'dataset' for Echarts
@@ -31,7 +32,7 @@ export const EChartToS_Opts = (symbol, chartData, theoData) => {
   };
 
   const legends = ['$Call', '$Put', '$Total', '$TheoGamma'];
-  const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.total, CHART_COLORS.theo];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
     {
@@ -65,8 +66,8 @@ export const EChartToS_Opts = (symbol, chartData, theoData) => {
     symbol: ['none', 'none'],
     silent: false,
     data: [
-      createXMarkLineData('x', closestLastIndex2, 'green', 'green', 'start'),
-      createXMarkLineData('x', closestOpenIndex2, 'red', 'red', 'start'),
+      createXMarkLineData('x', closestLastIndex2, CHART_COLORS.close, CHART_COLORS.close, 'start'),
+      createXMarkLineData('x', closestOpenIndex2, CHART_COLORS.open, CHART_COLORS.open, 'start'),
     ],
   };
 
@@ -80,7 +81,7 @@ export const EChartToS_Opts = (symbol, chartData, theoData) => {
       {
         text: `${symbol} Sum: ${SumTotalGEX}`,
         left: 'center',
-        textStyle: { fontSize: 30 },
+        textStyle: { fontSize: 18 },
       },
     ],
     ...commonOptions,
@@ -182,7 +183,7 @@ export function EChartToS_Theo_Opts(symbol, chartData, greek) {
     source: chartData,
   };
   const legends = ['TheoVanna', '$Put'];
-  const colors = ['#e01f54', '#0098d9'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
 
   let series = [
@@ -212,7 +213,7 @@ export function EChartToS_Theo_Opts(symbol, chartData, greek) {
       {
         text: ` ${symbol} ${greek} `,
         left: 'center',
-        textStyle: { fontSize: 30 },
+        textStyle: { fontSize: 18 },
       },
     ],
     ...commonOptions,

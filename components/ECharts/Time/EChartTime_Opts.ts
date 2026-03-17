@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import { SecondToDate, formatNumbers } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 export const transformArray = (chartData, strikePrice, expDateStr, columnvalue) => {
   const result = [];
@@ -54,10 +55,8 @@ export const EChartTime_Opts = (chartData) => {
     'total_notional_exposure',
   ];
   const option = {
-    backgroundColor: 'transparent',
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'transparent',
       hideDelay: 1500,
       confine: true,
       axisPointer: {
@@ -73,7 +72,7 @@ export const EChartTime_Opts = (chartData) => {
     grid: gridLayout,
   };
 
-  const colors = ['#e01f54', '#0098d9', '#001852'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.total];
 
   for (let i = 0; i < uni.length; i++) {
     option.dataset.push({

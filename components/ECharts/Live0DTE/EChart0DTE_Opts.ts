@@ -1,12 +1,13 @@
 /* eslint-disable */
 import { formatNumbers, datasets, commonOptions } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 export function EChart0DTE_Opts(chartData) {
   // Setting dimensions and get 'dataset' for Echarts
   const SGdimensions = ['saved_datetime', 'uticker_last_price', 'otm_market_premium', 'atm_market_exp_move',];
   const dataset = datasets(chartData, [], SGdimensions, []);
   const legends = ['Last Price', 'OTM_Mark_Premium', 'Expected_Move'];
-  const colors = ['#e01f54', '#0098d9', '#001852', '#e6b600'];
+  const colors = [CHART_COLORS.call, CHART_COLORS.put, CHART_COLORS.total, CHART_COLORS.theo];
   // Creating Series that an array of length 4 (put, call, totalgamma, theogamma)
   const series = [
     {

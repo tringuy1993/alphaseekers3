@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { updateProfile } from 'firebase/auth';
-import { Button, FileButton, Group, Progress, Stack, Text } from '@mantine/core';
+import { updateProfile, User as FirebaseAuthUser } from 'firebase/auth';
+import { Button, FileButton, Group, Progress, Stack, Text, Badge } from '@mantine/core';
 
 import { storage } from '@/app/authentication/firebase';
 import { useAuth } from '@/app/authentication/context';
+import classes from './profile.module.css';
 
 export function UserAvatarFile() {
   const [file, setFile] = useState<File | null>(null);
@@ -61,7 +62,9 @@ export function UserAvatarFile() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          updateProfile(currentUser, { photoURL: downloadURL });
+          if (currentUser) {
+            updateProfile(currentUser as unknown as FirebaseAuthUser, { photoURL: downloadURL });
+          }
           setLoading(false);
         });
       }
@@ -71,26 +74,31 @@ export function UserAvatarFile() {
   }
 
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5">
+    <div className={classes.avatarPanel}>
       <Image
         src={photoURL ? String(photoURL) : defaultImgUrl} // Add a default image URL if photoURL is null
         alt="Avatar Image"
         width={400}
         height={400}
-        style={{ borderRadius: '10%', border: '1px solid #fff' }}
+        className={classes.avatarImage}
       />
-      <Stack>
-        <Group>
-          <FileButton onChange={handleFileChange} accept="image/png,image/jpeg">
-            {(props) => <Button {...props}>Select Image</Button>}
+      <Stack className={classes.uploadActions}>
+        <Group className={classes.uploadRow}>
+          <FileButton onChange={handleFileChange} accept="image/png,image/jpeg,image/webp">
+            {(props) => <Button {...props} variant="outline">Select Image</Button>}
           </FileButton>
-          <Text>Selected File: {file ? file.name : 'No file Selected'}</Text>
+          <Badge variant="light" color={file ? 'brand' : 'gray'}>
+            {file ? 'File ready' : 'No file selected'}
+          </Badge>
         </Group>
-        <Button disabled={loading || !file} onClick={handleSetPhoto}>
+        <Text className={classes.uploadMeta}>
+          Selected file: {file ? file.name : 'none'}
+        </Text>
+        <Button disabled={loading || !file} onClick={handleSetPhoto} loading={loading}>
           Update Avatar
         </Button>
       </Stack>
-      {loading && <Progress value={perc} />}
+      {loading && <Progress value={perc} color="brand" animated />}
     </div>
   );
 }

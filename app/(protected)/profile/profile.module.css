@@ -1,9 +1,57 @@
+.page {
+  width: 100%;
+}
+
 .profileLayout {
-  /* margin: auto; */
-  margin-left: 10%;
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+  gap: var(--mantine-spacing-md);
+  align-items: start;
+}
+
+.avatarPanel {
+  display: grid;
+  gap: var(--mantine-spacing-sm);
+}
+
+.avatarImage {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--as-border-strong);
+  box-shadow: var(--as-shadow-sm);
+}
+
+.uploadMeta {
+  color: var(--as-text-secondary);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.uploadActions {
+  display: grid;
+  gap: var(--mantine-spacing-sm);
+}
+
+.uploadRow {
   display: flex;
-  flex-direction: row;
-  gap: 50px;
-  justify-content: center;
+  gap: var(--mantine-spacing-xs);
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.formShell {
+  display: grid;
+  gap: var(--mantine-spacing-sm);
+}
+
+.helperText {
+  color: var(--as-text-secondary);
+  font-size: var(--mantine-font-size-xs);
+}
+
+@media (max-width: 900px) {
+  .profileLayout {
+    grid-template-columns: 1fr;
+  }
 }

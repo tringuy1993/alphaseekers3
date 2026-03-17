@@ -1,4 +1,5 @@
 import { formatNumbers } from '../UtilECharts';
+import { CHART_COLORS } from '@/lib/chart-theme';
 
 interface LevelsDataPoint {
   strike_price: number;
@@ -74,7 +75,7 @@ export function EChartGamma_Levels_Opts(chartData: LevelsDataPoint[]) {
         type: 'bar',
         stack: 'gamma',
         data: callGamma,
-        itemStyle: { color: '#4dabf7' }, // Light blue for calls
+        itemStyle: { color: CHART_COLORS.call },
         barWidth: '70%',
         label: { show: false },
       },
@@ -83,7 +84,7 @@ export function EChartGamma_Levels_Opts(chartData: LevelsDataPoint[]) {
         type: 'bar',
         stack: 'gamma',
         data: putGamma,
-        itemStyle: { color: '#ffa94d' }, // Orange for puts
+        itemStyle: { color: CHART_COLORS.put },
         barWidth: '70%',
         label: { show: false },
         markLine:
@@ -91,12 +92,12 @@ export function EChartGamma_Levels_Opts(chartData: LevelsDataPoint[]) {
             ? {
                 silent: true,
                 symbol: 'none',
-                lineStyle: { color: '#ffd43b', width: 2, type: 'solid' },
+                lineStyle: { color: CHART_COLORS.spot, width: 2, type: 'solid' },
                 data: [{ yAxis: spotIndex }],
                 label: {
                   formatter: `${spotPrice.toFixed(2)}`,
                   position: 'insideEndTop',
-                  color: '#ffd43b',
+                  color: CHART_COLORS.spot,
                   fontSize: 12,
                   fontWeight: 'bold',
                 },

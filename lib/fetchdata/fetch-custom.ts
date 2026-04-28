@@ -11,13 +11,18 @@ const axiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-const axiosFetcher = async (url: string, params = {}, options = {}) => {
-  // Use cached token (no network call) for the initial request
-  let token = await getToken(false);
+const NETWORK_ERROR_MSG = 'Network error refreshing session. Please try again.';
 
-  if (Auth.currentUser && !token) {
-    throw new Error('Unable to authenticate. Please try again.');
+const axiosFetcher = async (url: string, params = {}, options = {}) => {
+  // First attempt uses the cached token (no Firebase round-trip).
+  const initial = await getToken(false);
+
+  if (initial.ok === false && Auth.currentUser) {
+    // Network blip refreshing a near-expiry token. Don't sign out — let SWR
+    // retry on its next interval; by then the SDK has usually recovered.
+    throw new Error(NETWORK_ERROR_MSG);
   }
+  const token = initial.ok ? initial.token : null;
 
   try {
     const response = await axiosInstance.get(url, {
@@ -27,11 +32,15 @@ const axiosFetcher = async (url: string, params = {}, options = {}) => {
     });
     return response.data;
   } catch (error: any) {
-    // On 401/403: force-refresh the token and retry once
+    // On 401/403: force-refresh the token and retry once.
     if (isAuthError(error.response?.status) && Auth.currentUser) {
-      token = await getToken(true);
+      const refreshed = await getToken(true);
 
-      if (!token) {
+      if (refreshed.ok === false) {
+        if (refreshed.reason === 'network') {
+          // Real session may still be valid; surface error without signing out.
+          throw new Error(NETWORK_ERROR_MSG);
+        }
         await handleSessionExpired();
         throw new Error('Session expired. Please sign in again.');
       }
@@ -39,12 +48,12 @@ const axiosFetcher = async (url: string, params = {}, options = {}) => {
       try {
         const retryResponse = await axiosInstance.get(url, {
           params,
-          headers: authHeaders(token),
+          headers: authHeaders(refreshed.token),
           ...options,
         });
         return retryResponse.data;
       } catch (retryError: any) {
-        // Second 401/403 — session is truly invalid
+        // Second 401/403 with a freshly-refreshed token — session is truly invalid.
         if (isAuthError(retryError.response?.status)) {
           await handleSessionExpired();
         }

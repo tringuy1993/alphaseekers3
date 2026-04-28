@@ -6,6 +6,14 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 ## Task History
 
+### 2026-04-28
+
+| Date | Time | Task | Status | Branch | Notes |
+|------|------|------|--------|--------|-------|
+| 2026-04-28 | - | Fix 60-min logout on /options-data — proactive token refresh | Complete | `fix/proactive-token-refresh` | `app/authentication/client-auth-provider.tsx`: swapped `onAuthStateChanged` → `onIdTokenChanged` so tenant.idToken tracks every silent refresh; added a `useEffect` that force-refreshes the ID token every 50 min and on `visibilitychange` (fixes laptop-sleep / backgrounded-tab class of bugs that reactive 401/403 retries had been chasing since Feb). `lib/fetchdata/auth-fetch-utils.ts`: changed `getToken` return type to a tagged `TokenResult` (`{ ok: true, token } \| { ok: false, reason: 'no-user' \| 'network' }`) so callers can distinguish exhausted-retry-on-network from real session expiry. `lib/fetchdata/fetch-custom.ts` and `fetch-custom-save.ts`: now throw a recoverable network error (lets SWR retry) instead of calling `handleSessionExpired` when force-refresh fails for transient reasons. Verified zero new type errors in touched files; prettier clean. |
+
+---
+
 ### 2026-01-21
 
 | Date | Time | Task | Status | Branch | Notes |

@@ -10,6 +10,15 @@ import {
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /**
+ * Tagged result so callers can tell *why* a token wasn't returned.
+ * Critical: a 'network' failure must NOT trigger sign-out (the user's
+ * session is still valid; we just couldn't reach Firebase to refresh).
+ */
+export type TokenResult =
+  | { ok: true; token: string }
+  | { ok: false; reason: 'no-user' | 'network' };
+
+/**
  * Clear local auth state, sign out of Firebase, and redirect to login.
  * Call this only when the session is truly invalid (e.g. second consecutive 401).
  */
@@ -23,31 +32,31 @@ export const handleSessionExpired = async () => {
 /**
  * Get a Firebase ID token.
  *
- * @param forceRefresh - If true, forces a network call to Firebase to refresh the token.
- *                       If false, uses the cached token (no network call).
- * @returns The ID token string, or null if no user is signed in.
- * @throws If the session is permanently expired (triggers handleSessionExpired).
+ * Permanent session-invalid errors (refresh token revoked/expired) trigger
+ * `handleSessionExpired` and throw — the caller never sees them.
+ * Transient errors (network, rate-limit) are retried with backoff and, if
+ * still failing, surfaced as `{ ok: false, reason: 'network' }` so the
+ * caller can decide whether to sign out.
  */
-export const getToken = async (forceRefresh: boolean): Promise<string | null> => {
+export const getToken = async (forceRefresh: boolean): Promise<TokenResult> => {
   if (!Auth.currentUser) {
-    return null;
+    return { ok: false, reason: 'no-user' };
   }
 
   const MAX_RETRIES = 2;
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
-      return await Auth.currentUser.getIdToken(forceRefresh);
+      const token = await Auth.currentUser.getIdToken(forceRefresh);
+      return { ok: true, token };
     } catch (tokenError: any) {
       const errorCode = tokenError?.code;
 
-      // Session is permanently invalid
       if (SESSION_EXPIRED_ERROR_CODES.includes(errorCode)) {
         await handleSessionExpired();
         throw new Error('Session expired. Please sign in again.');
       }
 
-      // Transient error — retry with backoff
       if (TRANSIENT_ERROR_CODES.includes(errorCode) && attempt < MAX_RETRIES) {
         console.warn(
           `Token refresh failed (attempt ${attempt + 1}/${MAX_RETRIES + 1}):`,
@@ -57,13 +66,12 @@ export const getToken = async (forceRefresh: boolean): Promise<string | null> =>
         continue;
       }
 
-      // Non-retryable or exhausted retries
       console.error('Token refresh failed:', tokenError);
       break;
     }
   }
 
-  return null;
+  return { ok: false, reason: 'network' };
 };
 
 /**

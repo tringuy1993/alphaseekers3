@@ -12,11 +12,22 @@ const axiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-const axiosFetchSave = async (url: string, params: Record<string, any> = {}, options: Record<string, any> = {}, _isRetry = false): Promise<any> => {
-  // Use cached token for initial requests, force-refresh on retry
-  let token = await getToken(_isRetry);
+const NETWORK_ERROR_MSG = 'Network error refreshing session. Please try again.';
 
-  if (Auth.currentUser && !token) {
+const axiosFetchSave = async (
+  url: string,
+  params: Record<string, any> = {},
+  options: Record<string, any> = {},
+  _isRetry = false
+): Promise<any> => {
+  // Use cached token for initial requests, force-refresh on retry
+  const result = await getToken(_isRetry);
+
+  if (result.ok === false && Auth.currentUser) {
+    if (result.reason === 'network') {
+      // Don't sign out on transient network failure — let SWR retry.
+      throw new Error(NETWORK_ERROR_MSG);
+    }
     if (_isRetry) {
       await handleSessionExpired();
       throw new Error('Session expired. Please sign in again.');
@@ -24,6 +35,7 @@ const axiosFetchSave = async (url: string, params: Record<string, any> = {}, opt
     throw new Error('Unable to authenticate. Please try again.');
   }
 
+  const token = result.ok ? result.token : null;
   const headers = authHeaders(token);
 
   try {
@@ -71,7 +83,8 @@ const axiosFetchSave = async (url: string, params: Record<string, any> = {}, opt
         }
       }
     } else {
-      if (process.env.NODE_ENV === 'development') console.log('No data in volumeTable or Data is not the right date, fetching from API');
+      if (process.env.NODE_ENV === 'development')
+        console.log('No data in volumeTable or Data is not the right date, fetching from API');
       await truncateVolumeTable();
 
       const freshData = await axiosInstance.get(url, {

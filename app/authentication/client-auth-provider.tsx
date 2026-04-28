@@ -5,7 +5,7 @@ import {
   IdTokenResult,
   signOut,
   User as FirebaseUser,
-  onAuthStateChanged,
+  onIdTokenChanged,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -104,9 +104,38 @@ const AuthProviderInner = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(Auth, handleAuthStateChanged);
+    // onIdTokenChanged fires on sign-in, sign-out, AND every silent token
+    // refresh — so tenant.idToken stays in sync with the SDK's auto-refresh.
+    const unsubscribe = onIdTokenChanged(Auth, handleAuthStateChanged);
     return unsubscribe;
   }, []);
+
+  // Proactive refresh: keep the Firebase ID token fresh while the tab is open.
+  // Firebase ID tokens expire after 1h. Background tabs throttle the SDK's own
+  // refresh timer, so on tab focus or every ~50min we force a refresh ourselves
+  // to avoid the next API request being the one that has to recover from expiry.
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const REFRESH_INTERVAL_MS = 50 * 60 * 1000;
+
+    const refresh = () => {
+      Auth.currentUser?.getIdToken(true).catch((err) => {
+        console.warn('Proactive token refresh failed:', err?.code || err);
+      });
+    };
+
+    const interval = setInterval(refresh, REFRESH_INTERVAL_MS);
+    const onVisibility = () => {
+      if (!document.hidden) refresh();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [currentUser]);
 
   const contextData = {
     currentUser,

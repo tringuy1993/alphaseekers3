@@ -6,6 +6,14 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 ## Task History
 
+### 2026-05-14
+
+| Date | Time | Task | Status | Branch | Notes |
+|------|------|------|--------|--------|-------|
+| 2026-05-14 | - | Patch May 2026 Next.js security advisory (13 CVEs) — major upgrade to Next 15.5.18 + React 19.2.6 | Complete | `feature/nextjs-may2026-security` | Patches all 13 advisories in Vercel's May 2026 coordinated release (5× middleware/proxy auth-bypass, 3× DoS incl. React **CVE-2026-23870**, 1× SSRF, 2× cache-poisoning, 2× XSS). Next 13.x/14.x get **no patch** — major upgrade is Vercel's only complete mitigation. **Bumps:** `next` 14.2.35→15.5.18 (exact); `react`/`react-dom` 18.2.0→^19.2.6; `@next/bundle-analyzer` ^14→^15.5.18; `@next/eslint-plugin-next` ^16→^15.5.18 (aligns to Next major); `@tabler/icons-react` ^2.46→^3.44.0 (v2 peer excluded React 19); `@types/react` →^19.2.14, **added** `@types/react-dom` ^19.2.3; `@testing-library/react` ^14→^16.3.2 + `@testing-library/dom` ^9→^10.4.1 (v14/v9 incompat with React 19). Removed stray committed `package-lock.json` (project is yarn@4). **Not bumped** (peer-deps verified compatible): `@mantine/*` (^7.4.x → 7.17.8, peer `^18 \|\| ^19`), `mantine-react-table` (already on 2.0.0-beta.9, highest v2 — the runbook's `@latest` would have *downgraded* it to v1.3.4/Mantine 6), `@emotion/react`, `echarts-for-react`. Storybook 7.x deferred (dev-only, expected `@storybook/nextjs`/`@storybook/blocks` peer warnings — follow-up to bump to Storybook 8). **Code changes: NONE** — exhaustive codebase scan found zero Next 15 / React 19 breaking-change patterns (no `next/headers` imports, no `propTypes`/`defaultProps`/`ReactDOM.render`/`useFormState`, no `react-dom/test-utils`, no `useRef()` no-arg, no `@next/font`, no `legacyBehavior`, no server-side `fetch()` in `app/`, no `forwardRef`). **Verified:** `yarn build` ✓ (Next 15.5.18, all 14 routes, 16 static pages, 35.2s); `yarn start` smoke ✓ (`/`→307 /options-data; `/about`/`/live0dte`/`/music`/`/options-data`/`/authentication/signin`→200; hostile `Origin`→400 via middleware; security headers all present); `yarn jest` runs (no tests exist — pre-existing); 334 TS errors + 811 lint errors are all **pre-existing** (suppressed by `next.config.mjs` `ignoreBuildErrors`+`ignoreDuringBuilds`, zero reference React/Next types or `@next/*` rules). Runbook: `docs/NEXTJS_MAY2026_SECURITY_PATCH.md`. Production deploy GATED pending PR review. Ref: <https://vercel.com/changelog/next-js-may-2026-security-release> |
+
+---
+
 ### 2026-04-28
 
 | Date | Time | Task | Status | Branch | Notes |
@@ -52,9 +60,10 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 | Priority | Task | Added Date | Notes |
 |----------|------|------------|-------|
-| HIGH | Fix TypeScript errors (70+ issues) | 2026-01-16 | Mostly implicit `any` types in backtest/, music/, components/ |
-| MEDIUM | Remove yarn.lock and packageManager field | 2026-01-16 | Project uses npm |
-| LOW | Fix ESLint warnings | 2026-01-16 | Review after TypeScript fixes |
+| HIGH | Fix TypeScript errors (334 reported by `yarn typecheck` as of 2026-05-14) | 2026-01-16 | Mostly implicit `any` (TS7006/7031) in `components/ECharts/`, `components/Music/`, `lib/database/`, `store/Live0DTE/`, `theme.ts`. Suppressed by `next.config.mjs` `typescript.ignoreBuildErrors: true`. |
+| LOW | Fix ESLint warnings (811 reports; ~786 are `linebreak-style` CRLF/LF config noise) | 2026-01-16 | Suppressed by `next.config.mjs` `eslint.ignoreDuringBuilds: true`. ~25 real code issues (`object-shorthand`, `dot-notation`, `no-use-before-define`, `no-unused-vars`). |
+| LOW | Migrate `next lint` → ESLint CLI before Next 16 | 2026-05-14 | `next lint` is deprecated in Next 16. Run `npx @next/codemod@canary next-lint-to-eslint-cli .`. Not blocking on Next 15.5. |
+| LOW | Bump Storybook 7 → 8 for Next 15 + React 19 compat | 2026-05-14 | Dev-only; expected peer warnings on `@storybook/nextjs`, `@storybook/blocks`, `@storybook/addon-essentials` after the May 2026 security upgrade. Storybook 7 is not shipped to production, so this is not blocking. |
 
 ---
 

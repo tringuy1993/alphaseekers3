@@ -5990,6 +5990,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fancy-canvas@npm:2.1.0":
+  version: 2.1.0
+  resolution: "fancy-canvas@npm:2.1.0"
+  checksum: 2b863b1548214ac793a5104154be389dbca6847c53c8bda88e4309f14bcdb498f4da21e368b573f3ab5f458d3b47c3f0ef731a7b90c8264b23c1cf0bfc9d1da3
+  languageName: node
+  linkType: hard
+
 "fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
@@ -7890,6 +7897,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lightweight-charts@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "lightweight-charts@npm:5.2.0"
+  dependencies:
+    fancy-canvas: "npm:2.1.0"
+  checksum: 73e67701445397c3aec4887d94e8cbd29fa1f19086146a5372a24a697795e4e0fd9404e9d699f255b3a8865fe0bcc14e958cb4e13ea96ec270f1a9bb2f0b750e
+  languageName: node
+  linkType: hard
+
 "lines-and-columns@npm:^1.1.6":
   version: 1.2.4
   resolution: "lines-and-columns@npm:1.2.4"
@@ -8096,6 +8112,7 @@ __metadata:
     firebase: "npm:^12.7.0"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
+    lightweight-charts: "npm:^5.2.0"
     mantine-react-table: "npm:^2.0.0-alpha.10"
     moment-timezone: "npm:^0.5.44"
     next: "npm:15.5.18"

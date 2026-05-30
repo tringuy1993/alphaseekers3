@@ -1,0 +1,48 @@
+.metricControl {
+  min-width: 420px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.strikeTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.strikeTable th,
+.strikeTable td {
+  padding: 8px 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--as-border) 72%, transparent);
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.strikeTable th:first-child,
+.strikeTable td:first-child {
+  text-align: left;
+}
+
+.strikeTable th {
+  color: var(--as-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.positive {
+  color: var(--as-live);
+}
+
+.negative {
+  color: var(--as-negative);
+}
+
+@media (max-width: 768px) {
+  .metricControl {
+    min-width: 100%;
+  }
+}

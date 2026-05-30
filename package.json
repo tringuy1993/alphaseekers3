@@ -38,6 +38,7 @@
     "embla-carousel-autoplay": "^7.1.0",
     "embla-carousel-react": "^7.1.0",
     "firebase": "^12.7.0",
+    "lightweight-charts": "^5.2.0",
     "mantine-react-table": "^2.0.0-alpha.10",
     "moment-timezone": "^0.5.44",
     "next": "15.5.18",

@@ -112,3 +112,19 @@ export const GAMMA_DASHBOARD_EXPIRATIONS_URL = 'api/data/gamma-dashboard/expirat
 
 // Available trading dates with data
 export const GAMMA_DASHBOARD_DATES_URL = 'api/data/gamma-dashboard/available-dates/';
+
+// =============================================================================
+// Options Data Flow Endpoints (Protected)
+// =============================================================================
+
+// Available flow sessions for an underlying
+export const OPTIONS_FLOW_SESSIONS_URL = 'api/data/options-flow/sessions/';
+
+// Available expirations for a flow session
+export const OPTIONS_FLOW_EXPIRATIONS_URL = 'api/data/options-flow/expirations/';
+
+// Strike ladder with baseline, flow, and flow-adjusted GEX
+export const OPTIONS_FLOW_STRIKE_LADDER_URL = 'api/data/options-flow/strike-ladder/';
+
+// Intraday path of opening baseline plus cumulative dealer GEX flow
+export const OPTIONS_FLOW_INTRADAY_GEX_URL = 'api/data/options-flow/intraday-gex/';

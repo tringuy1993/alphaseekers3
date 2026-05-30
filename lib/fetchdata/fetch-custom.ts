@@ -64,10 +64,10 @@ const axiosFetcher = async (url: string, params = {}, options = {}) => {
   }
 };
 
-function useCustomSWR(url: string, params = {}, swrOptions = {}) {
+function useCustomSWR(url: string | null, params = {}, swrOptions = {}) {
   const { data, error, isLoading, ...rest } = useSWR(
-    [url, params],
-    () => axiosFetcher(url, params, swrOptions),
+    url ? [url, params] : null,
+    ([requestUrl, requestParams]) => axiosFetcher(requestUrl, requestParams),
     swrOptions
   );
 

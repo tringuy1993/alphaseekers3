@@ -6,6 +6,12 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 ## Task History
 
+### 2026-05-28
+
+| Date | Time | Task | Status | Branch | Notes |
+|------|------|------|--------|--------|-------|
+| 2026-05-28 | 22:00 PDT | T2 protected Options Data Flow page | Complete | `main` | Added `/options-data-flow`, sidebar/auth config, options-flow API constants, `lightweight-charts@5.2.0`, live SWR refresh for latest sessions, and a strike ladder with baseline/adjusted lines plus signed flow histogram. Verified `yarn build` and local route compile at `http://localhost:3002/options-data-flow`. |
+
 ### 2026-05-14
 
 | Date | Time | Task | Status | Branch | Notes |

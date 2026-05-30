@@ -9,6 +9,7 @@ export const siteConfig = {
 
 export const siteLinks = {
   optionsdata: { title: 'Options Data', href: '/options-data' },
+  optionsdataflow: { title: 'Options Data Flow', href: '/options-data-flow' },
   backtest: { title: 'Back Test', href: '/backtest' },
   optionstime: { title: 'Options Time', href: '/options-time' },
   gammadashboard: { title: 'Gamma Dashboard', href: '/gamma-dashboard' },
@@ -25,6 +26,7 @@ export const siteLinks = {
 // Protected routes (require authentication)
 export const authorizedLinksList = [
   siteLinks.optionsdata.href,
+  siteLinks.optionsdataflow.href,
   siteLinks.backtest.href,
   siteLinks.optionstime.href,
   siteLinks.gammadashboard.href,

@@ -7,6 +7,7 @@ import {
   IconGauge,
   IconDeviceDesktopAnalytics,
   IconChartAreaLine,
+  IconChartHistogram,
 } from '@tabler/icons-react';
 import { siteLinks } from '@/config/site';
 import classes from './SideBar.module.css';
@@ -46,6 +47,11 @@ function NavbarLink({ icon: Icon, label, href, active, expanded }: NavbarLinkPro
 
 const analyticsLinks = [
   { icon: IconHome2, label: siteLinks.optionsdata.title, href: siteLinks.optionsdata.href },
+  {
+    icon: IconChartHistogram,
+    label: siteLinks.optionsdataflow.title,
+    href: siteLinks.optionsdataflow.href,
+  },
   { icon: IconGauge, label: siteLinks.optionstime.title, href: siteLinks.optionstime.href },
   {
     icon: IconChartAreaLine,

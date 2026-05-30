@@ -33,10 +33,10 @@ import { OptionsFlowIntradayChart, OptionsFlowIntradayRow } from './OptionsFlowI
 import {
   OptionsFlowModel,
   OptionsFlowMetric,
-  OptionsFlowStrikeChart,
   OptionsFlowStrikeRow,
   getStrikeMetricValue,
 } from './OptionsFlowStrikeChart';
+import { OptionsFlowPriceGexProfileChart } from './OptionsFlowPriceGexProfileChart';
 import classes from './page.module.css';
 
 const UNDERLYING_OPTIONS = [
@@ -440,15 +440,17 @@ export default function OptionsDataFlowPage() {
 
       <DataPanel
         eyebrow="Primary Surface"
-        title={`${getMetricLabel(metric)} by strike`}
-        subtitle={`${ticker} strike ladder aggregated across the selected expirations.`}
+        title={`${ticker} intraday price and latest ${getMetricLabel(metric)} profile`}
+        subtitle={`${getFlowModelLabel(flowModel)} profile aligned to the right price axis across the selected expirations.`}
         variant="hero"
       >
-        {ladderLoading || sessionsLoading ? (
+        {ladderLoading || intradayLoading || sessionsLoading ? (
           <ChartSkeleton />
         ) : (
-          <OptionsFlowStrikeChart
-            rows={rows}
+          <OptionsFlowPriceGexProfileChart
+            ticker={ticker}
+            intradayRows={intradayRows}
+            strikeRows={rows}
             metric={metric}
             flowModel={flowModel}
             showTotal={showTotal}
@@ -458,6 +460,11 @@ export default function OptionsDataFlowPage() {
         {ladderError ? (
           <Text size="xs" c="var(--as-negative)" mt="sm">
             Could not load the strike ladder.
+          </Text>
+        ) : null}
+        {intradayError ? (
+          <Text size="xs" c="var(--as-negative)" mt="sm">
+            Could not load the intraday price path.
           </Text>
         ) : null}
       </DataPanel>
@@ -515,7 +522,7 @@ export default function OptionsDataFlowPage() {
 function ChartSkeleton() {
   return (
     <Stack gap="sm">
-      <Skeleton height={520} radius="sm" />
+      <Skeleton height={560} radius="sm" />
       <Skeleton height={14} width="40%" radius="xl" />
     </Stack>
   );

@@ -152,9 +152,8 @@ export function OptionsFlowIntradayChart({ rows, flowModel, showTotal, resetKey 
         attributionLogo: false,
       },
       localization: {
-        precision: 0,
         priceFormatter: formatAxisValue,
-        timeFormatter: (time) => formatChartTime(Number(time)),
+        timeFormatter: (time: Time) => formatChartTime(Number(time)),
       },
       grid: {
         vertLines: { color: colors.border },

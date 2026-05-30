@@ -26,6 +26,7 @@ import {
   OPTIONS_FLOW_EXPIRATIONS_URL,
   OPTIONS_FLOW_INTRADAY_GEX_URL,
   OPTIONS_FLOW_SESSIONS_URL,
+  OPTIONS_FLOW_SNAPSHOTS_URL,
   OPTIONS_FLOW_STRIKE_LADDER_URL,
 } from '@/lib/fetchdata/apiURLs';
 
@@ -80,12 +81,25 @@ type FlowExpiration = {
   is_latest_session: boolean;
 };
 
+type FlowSnapshot = {
+  session_date: string;
+  snapshot_minute: string;
+  source_snapshot_time: string;
+  minute_of_session: number | null;
+  spot_price: number | null;
+  is_latest_snapshot: boolean;
+};
+
 type StrikeLadderResponse = {
   meta: {
     und_symbol: string;
     calculation_version: string;
     session_date: string | null;
     latest_snapshot_minute: string | null;
+    snapshot_minute: string | null;
+    source_snapshot_time: string | null;
+    session_latest_snapshot_minute: string | null;
+    is_replay: boolean;
     latest_available_session_date: string | null;
     is_latest_session: boolean;
     expirations: string[];
@@ -126,6 +140,10 @@ type IntradayGexResponse = {
     session_date: string | null;
     opening_snapshot_minute: string | null;
     latest_snapshot_minute: string | null;
+    snapshot_minute: string | null;
+    source_snapshot_time: string | null;
+    session_latest_snapshot_minute: string | null;
+    is_replay: boolean;
     latest_available_session_date: string | null;
     is_latest_session: boolean;
     expirations: string[];
@@ -146,6 +164,7 @@ type IntradayGexResponse = {
 export default function OptionsDataFlowPage() {
   const [ticker, setTicker] = useState('$SPX.X');
   const [selectedSession, setSelectedSession] = useState<string | null>(null);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<string | null>(null);
   const [selectedExpirations, setSelectedExpirations] = useState<string[]>([]);
   const [metric, setMetric] = useState<OptionsFlowMetric>('flow_adjusted_gex_1pct');
   const [flowModel, setFlowModel] = useState<OptionsFlowModel>('blended');
@@ -170,12 +189,45 @@ export default function OptionsDataFlowPage() {
 
   useEffect(() => {
     setSelectedSession(null);
+    setSelectedSnapshot(null);
     setSelectedExpirations([]);
   }, [ticker]);
 
+  useEffect(() => {
+    setSelectedSnapshot(null);
+    setSelectedExpirations([]);
+  }, [selectedSession]);
+
+  const selectedSessionIsLatest = Boolean(
+    selectedSession && latestSession && selectedSession === latestSession.session_date
+  );
+
+  const { data: snapshotsData, isLoading: snapshotsLoading } = useCustomSWR(
+    selectedSession ? OPTIONS_FLOW_SNAPSHOTS_URL : null,
+    selectedSession ? { und_symbol: ticker, session_date: selectedSession } : {},
+    { refreshInterval: selectedSessionIsLatest ? 60000 : 0 }
+  );
+
+  const snapshots: FlowSnapshot[] = useMemo(() => snapshotsData?.data || [], [snapshotsData]);
+
+  useEffect(() => {
+    if (
+      selectedSnapshot &&
+      snapshots.length > 0 &&
+      !snapshots.some((snapshot) => snapshot.snapshot_minute === selectedSnapshot)
+    ) {
+      setSelectedSnapshot(null);
+    }
+  }, [selectedSnapshot, snapshots]);
+
+  const replayParam = useMemo(
+    () => (selectedSnapshot ? { snapshot_minute: selectedSnapshot } : {}),
+    [selectedSnapshot]
+  );
+
   const { data: expirationsData, isLoading: expirationsLoading } = useCustomSWR(
     selectedSession ? OPTIONS_FLOW_EXPIRATIONS_URL : null,
-    selectedSession ? { und_symbol: ticker, session_date: selectedSession } : {}
+    selectedSession ? { und_symbol: ticker, session_date: selectedSession, ...replayParam } : {}
   );
 
   const expirations: FlowExpiration[] = useMemo(
@@ -204,19 +256,18 @@ export default function OptionsDataFlowPage() {
     }
   }, [expirations, selectedExpirations]);
 
-  const isLatestSelected = Boolean(
-    selectedSession && latestSession && selectedSession === latestSession.session_date
-  );
+  const isLatestSelected = Boolean(!selectedSnapshot && selectedSessionIsLatest);
 
   const ladderParams = useMemo(
     () => ({
       und_symbol: ticker,
       session_date: selectedSession,
       expirations: JSON.stringify(selectedExpirations),
+      ...replayParam,
     }),
-    [selectedExpirations, selectedSession, ticker]
+    [replayParam, selectedExpirations, selectedSession, ticker]
   );
-  const chartResetKey = `${ticker}-${selectedSession || ''}-${selectedExpirations.join('|')}`;
+  const chartResetKey = `${ticker}-${selectedSession || ''}-${selectedSnapshot || 'latest'}-${selectedExpirations.join('|')}`;
 
   const {
     data: ladderData,
@@ -249,6 +300,16 @@ export default function OptionsDataFlowPage() {
     value: session.session_date,
   }));
 
+  const snapshotOptions = [
+    { label: isLatestSelected ? 'Live latest' : 'Latest available', value: '__latest__' },
+    ...snapshots.map((snapshot) => ({
+      label: `${formatMarketTime(snapshot.snapshot_minute)}${
+        snapshot.is_latest_snapshot ? ' (latest)' : ''
+      }`,
+      value: snapshot.snapshot_minute,
+    })),
+  ];
+
   const expirationOptions = expirations.map((expiration) => ({
     label: `${expiration.expiration_date} (${expiration.dte} DTE)`,
     value: expiration.expiration_date,
@@ -257,9 +318,13 @@ export default function OptionsDataFlowPage() {
   const selectedExpLabel = selectedExpirations.length
     ? selectedExpirations.join(', ')
     : 'No expirations';
-  const snapshotLabel = meta?.latest_snapshot_minute
-    ? formatDateTime(meta.latest_snapshot_minute)
-    : 'No snapshot';
+  const activeSnapshot = meta?.snapshot_minute || meta?.latest_snapshot_minute || selectedSnapshot;
+  const snapshotLabel = activeSnapshot ? formatDateTime(activeSnapshot) : 'No snapshot';
+  const replayLabel = selectedSnapshot
+    ? 'Replay'
+    : isLatestSelected
+      ? 'Live refresh'
+      : 'Session close';
   const spotLabel = meta?.spot ? formatCurrency(meta.spot, 2) : '--';
   const totalAdjusted = getMetaFlowAdjusted(meta, 'total', flowModel);
   const totalCallAdjusted = getMetaFlowAdjusted(meta, 'call', flowModel);
@@ -290,6 +355,16 @@ export default function OptionsDataFlowPage() {
             searchable
             disabled={sessionsLoading || sessionOptions.length === 0}
             miw={170}
+          />
+          <SelectWrapper
+            label="Profile Time"
+            data={snapshotOptions}
+            value={selectedSnapshot || '__latest__'}
+            onChange={(value) => setSelectedSnapshot(value === '__latest__' ? null : value)}
+            searchable
+            disabled={snapshotsLoading || snapshotOptions.length <= 1}
+            miw={170}
+            maxDropdownHeight={280}
           />
           <MultiSelect
             label="Expirations"
@@ -358,8 +433,11 @@ export default function OptionsDataFlowPage() {
       }
       summarySlot={
         <Group gap="xs">
-          <Badge variant="light" color={isLatestSelected ? 'positive' : 'gray'}>
-            {isLatestSelected ? 'Live refresh' : 'Static session'}
+          <Badge
+            variant="light"
+            color={isLatestSelected ? 'positive' : selectedSnapshot ? 'accent' : 'gray'}
+          >
+            {replayLabel}
           </Badge>
           <Badge variant="light" color="brand">
             {selectedExpirations.length || 0} expiries
@@ -379,13 +457,13 @@ export default function OptionsDataFlowPage() {
         title="Options Data Flow"
         subtitle={`${ticker} flow-adjusted gamma exposure by strike across ${selectedExpLabel}.`}
         status={{
-          label: isLatestSelected ? 'Live' : 'Snapshot',
+          label: isLatestSelected ? 'Live' : selectedSnapshot ? 'Replay' : 'Snapshot',
           tone: isLatestSelected ? 'live' : 'muted',
         }}
         meta={[
           { label: 'Underlying', value: ticker },
           { label: 'Session', value: selectedSession || 'Loading' },
-          { label: 'Snapshot', value: snapshotLabel },
+          { label: 'Profile Time', value: snapshotLabel },
           { label: 'Expiries', value: selectedExpirations.length || 0 },
         ]}
       />
@@ -395,7 +473,7 @@ export default function OptionsDataFlowPage() {
       <MetricStrip
         items={[
           {
-            label: 'Latest Snapshot',
+            label: 'Profile Time',
             value: snapshotLabel,
             tone: isLatestSelected ? 'live' : 'neutral',
           },
@@ -706,12 +784,25 @@ function getMetaMinuteFlow(
 }
 
 function formatDateTime(value: string) {
-  return new Date(value).toLocaleString(undefined, {
+  return `${toMarketDate(value).toLocaleString(undefined, {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
-  });
+  })} ET`;
+}
+
+function formatMarketTime(value: string) {
+  return `${toMarketDate(value).toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  })} ET`;
+}
+
+function toMarketDate(value: string) {
+  const storedPacificDate = new Date(value);
+  storedPacificDate.setHours(storedPacificDate.getHours() + 3);
+  return storedPacificDate;
 }
 
 function formatStrike(value: number) {

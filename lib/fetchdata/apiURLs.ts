@@ -120,6 +120,9 @@ export const GAMMA_DASHBOARD_DATES_URL = 'api/data/gamma-dashboard/available-dat
 // Available flow sessions for an underlying
 export const OPTIONS_FLOW_SESSIONS_URL = 'api/data/options-flow/sessions/';
 
+// Available intraday snapshots for a flow session
+export const OPTIONS_FLOW_SNAPSHOTS_URL = 'api/data/options-flow/snapshots/';
+
 // Available expirations for a flow session
 export const OPTIONS_FLOW_EXPIRATIONS_URL = 'api/data/options-flow/expirations/';
 

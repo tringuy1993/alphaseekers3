@@ -6,6 +6,12 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 ## Task History
 
+### 2026-05-29
+
+| Date | Time | Task | Status | Branch | Notes |
+|------|------|------|--------|--------|-------|
+| 2026-05-29 | 23:59 PDT | T4 options-data-flow intraday replay control | Complete | `main` | Added a Profile Time selector backed by the new snapshots API, passes `snapshot_minute` to expirations, strike ladder, and intraday GEX requests, displays selected profile times in market ET, and keeps live refresh only for the latest unpinned session. Verified focused prettier and `corepack yarn build`; full typecheck still fails on known pre-existing project-wide errors outside the touched files. |
+
 ### 2026-05-28
 
 | Date | Time | Task | Status | Branch | Notes |

@@ -103,8 +103,7 @@ export function OptionsFlowPriceGexProfileChart({
         chartTime: toChartTime(row.snapshot_minute),
       }))
       .filter(
-        (row) =>
-          row.chartTime !== null && Number.isFinite(row.spot_price) && row.spot_price > 0
+        (row) => row.chartTime !== null && Number.isFinite(row.spot_price) && row.spot_price > 0
       )
       .sort((a, b) => Number(a.chartTime) - Number(b.chartTime));
 
@@ -277,11 +276,7 @@ export function OptionsFlowPriceGexProfileChart({
       lastValueVisible: true,
       crosshairMarkerVisible: true,
       autoscaleInfoProvider: (baseImplementation: () => AutoscaleInfo | null) =>
-        expandAutoscaleInfo(
-          baseImplementation(),
-          strikePricesRef.current,
-          strikeStepRef.current
-        ),
+        expandAutoscaleInfo(baseImplementation(), strikePricesRef.current, strikeStepRef.current),
     });
     const handleVisibleRangeChange = () => scheduleProfileSync();
     const syncTimeouts: number[] = [];
@@ -425,7 +420,8 @@ export function OptionsFlowPriceGexProfileChart({
                 size="xs"
                 className={activeReadout.change >= 0 ? classes.readoutUp : classes.readoutDown}
               >
-                {formatSignedPrice(activeReadout.change)} ({formatSignedPercent(activeReadout.changePct)})
+                {formatSignedPrice(activeReadout.change)} (
+                {formatSignedPercent(activeReadout.changePct)})
               </Text>
             </div>
           </div>
@@ -447,7 +443,7 @@ export function OptionsFlowPriceGexProfileChart({
       >
         <div className={classes.profileHeader}>
           <Text size="xs" className={classes.profileTitle}>
-            Latest profile
+            Selected profile
           </Text>
           <Text size="xs" className={classes.profileMeta}>
             {getMetricShortLabel(metric)}
@@ -570,7 +566,9 @@ function expandAutoscaleInfo(
   const maxExtension = Math.max(baseSpan * 1.6, step * 3);
   const candidateMin = baseMin - extension;
   const candidateMax = baseMax + extension;
-  const nearbyStrikes = strikes.filter((strike) => strike >= candidateMin && strike <= candidateMax);
+  const nearbyStrikes = strikes.filter(
+    (strike) => strike >= candidateMin && strike <= candidateMax
+  );
   const strikeMin = nearbyStrikes.length ? nearbyStrikes[0] : baseMin;
   const strikeMax = nearbyStrikes.length ? nearbyStrikes[nearbyStrikes.length - 1] : baseMax;
   const minValue = Math.max(Math.min(baseMin, strikeMin), baseMin - maxExtension);
@@ -591,9 +589,7 @@ function expandAutoscaleInfo(
 
 function getProfileMaxMagnitude(points: ProfilePoint[], includeTotal: boolean) {
   const maxMagnitude = points.reduce((currentMax, point) => {
-    const values = includeTotal
-      ? [point.call, point.put, point.total]
-      : [point.call, point.put];
+    const values = includeTotal ? [point.call, point.put, point.total] : [point.call, point.put];
     const rowMax = Math.max(...values.map((value) => Math.abs(value)));
     return Math.max(currentMax, rowMax);
   }, 0);

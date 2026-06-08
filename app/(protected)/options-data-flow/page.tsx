@@ -267,7 +267,18 @@ export default function OptionsDataFlowPage() {
     }),
     [replayParam, selectedExpirations, selectedSession, ticker]
   );
-  const chartResetKey = `${ticker}-${selectedSession || ''}-${selectedSnapshot || 'latest'}-${selectedExpirations.join('|')}`;
+
+  const intradayParams = useMemo(
+    () => ({
+      und_symbol: ticker,
+      session_date: selectedSession,
+      expirations: JSON.stringify(selectedExpirations),
+    }),
+    [selectedExpirations, selectedSession, ticker]
+  );
+
+  const profileChartResetKey = `${ticker}-${selectedSession || ''}-${selectedSnapshot || 'latest'}-${selectedExpirations.join('|')}`;
+  const intradayChartResetKey = `${ticker}-${selectedSession || ''}-${selectedExpirations.join('|')}`;
 
   const {
     data: ladderData,
@@ -285,8 +296,8 @@ export default function OptionsDataFlowPage() {
     isError: intradayError,
   } = useCustomSWR(
     selectedSession && selectedExpirations.length > 0 ? OPTIONS_FLOW_INTRADAY_GEX_URL : null,
-    ladderParams,
-    { refreshInterval: isLatestSelected ? 60000 : 0 }
+    intradayParams,
+    { refreshInterval: selectedSessionIsLatest ? 60000 : 0 }
   );
 
   const ladder = ladderData as StrikeLadderResponse | undefined;
@@ -325,7 +336,12 @@ export default function OptionsDataFlowPage() {
     : isLatestSelected
       ? 'Live refresh'
       : 'Session close';
-  const spotLabel = meta?.spot ? formatCurrency(meta.spot, 2) : '--';
+  const intradaySpot = getLatestIntradaySpot(intradayRows);
+  const spotLabel = intradaySpot
+    ? formatCurrency(intradaySpot, 2)
+    : meta?.spot
+      ? formatCurrency(meta.spot, 2)
+      : '--';
   const totalAdjusted = getMetaFlowAdjusted(meta, 'total', flowModel);
   const totalCallAdjusted = getMetaFlowAdjusted(meta, 'call', flowModel);
   const totalPutAdjusted = getMetaFlowAdjusted(meta, 'put', flowModel);
@@ -518,7 +534,7 @@ export default function OptionsDataFlowPage() {
 
       <DataPanel
         eyebrow="Primary Surface"
-        title={`${ticker} intraday price and latest ${getMetricLabel(metric)} profile`}
+        title={`${ticker} intraday price and selected ${getMetricLabel(metric)} profile`}
         subtitle={`${getFlowModelLabel(flowModel)} profile aligned to the right price axis across the selected expirations.`}
         variant="hero"
       >
@@ -532,7 +548,7 @@ export default function OptionsDataFlowPage() {
             metric={metric}
             flowModel={flowModel}
             showTotal={showTotal}
-            resetKey={chartResetKey}
+            resetKey={profileChartResetKey}
           />
         )}
         {ladderError ? (
@@ -560,7 +576,7 @@ export default function OptionsDataFlowPage() {
             rows={intradayRows}
             flowModel={flowModel}
             showTotal={showTotal}
-            resetKey={chartResetKey}
+            resetKey={intradayChartResetKey}
           />
         )}
         {intradayError ? (
@@ -781,6 +797,18 @@ function getMetaMinuteFlow(
           : meta.total_minute_dealer_gex_1pct
     ) || 0
   );
+}
+
+function getLatestIntradaySpot(rows: OptionsFlowIntradayRow[]) {
+  for (let index = rows.length - 1; index >= 0; index -= 1) {
+    const spot = Number(rows[index].spot_price);
+
+    if (Number.isFinite(spot) && spot > 0) {
+      return spot;
+    }
+  }
+
+  return null;
 }
 
 function formatDateTime(value: string) {

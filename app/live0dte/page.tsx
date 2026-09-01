@@ -17,7 +17,10 @@ import {
 
 export default function PageLive0DTE() {
   const [uTicker, setUTicker] = useState('$SPX.X');
-  const [defaultDate, setUDate] = useState<string>(new Date().toISOString().slice(0, 10));
+  // null until SelectUDate resolves the latest available trading date — charts
+  // skip fetching (null SWR key) so we never query a non-existent session.
+  const [defaultDate, setUDate] = useState<string | null>(null);
+  const displayDate = defaultDate ?? '—';
 
   const handleUTickerChange = (newDate: string) => {
     setUDate(newDate);
@@ -31,7 +34,9 @@ export default function PageLive0DTE() {
 
   const controls = (
     <FilterBar
-      contextSlot={<SelectUDate uTicker={uTicker} onDefaultDateChange={handleUTickerChange} size="xs" />}
+      contextSlot={
+        <SelectUDate uTicker={uTicker} onDefaultDateChange={handleUTickerChange} size="xs" />
+      }
       viewSlot={<SelectUticker uTicker={uTicker} setUTicker={setUTicker} size="xs" />}
       summarySlot={
         <Group gap="xs">
@@ -42,7 +47,7 @@ export default function PageLive0DTE() {
             {uTicker}
           </Badge>
           <Badge variant="light" color="accent">
-            {defaultDate}
+            {displayDate}
           </Badge>
         </Group>
       }
@@ -54,11 +59,11 @@ export default function PageLive0DTE() {
       <AnalyticsPageHeader
         eyebrow="Market Map"
         title="Live 0DTE"
-        subtitle={`Intraday 0DTE surface for ${uTicker} on ${defaultDate}, with volume and greek lenses in supporting panels.`}
+        subtitle={`Intraday 0DTE surface for ${uTicker} on ${displayDate}, with volume and greek lenses in supporting panels.`}
         status={{ label: 'Live Session', tone: 'live' }}
         meta={[
           { label: 'Underlying', value: uTicker },
-          { label: 'Session Date', value: defaultDate },
+          { label: 'Session Date', value: displayDate },
           { label: 'Lenses', value: 'Gamma / Vanna / Delta' },
           { label: 'Volume', value: 'At strike' },
         ]}
@@ -69,10 +74,15 @@ export default function PageLive0DTE() {
       <MetricStrip
         items={[
           { label: 'Underlying', value: uTicker, hint: 'Current live session symbol' },
-          { label: 'Date', value: defaultDate, hint: 'Selected trading date' },
+          { label: 'Date', value: displayDate, hint: 'Selected trading date' },
           { label: 'View', value: 'Live map', tone: 'live', hint: 'Primary intraday surface' },
           { label: 'Greek lenses', value: '3', hint: 'Gamma, Vanna, Delta' },
-          { label: 'Volume pane', value: 'Enabled', tone: 'positive', hint: 'Strike-level readout' },
+          {
+            label: 'Volume pane',
+            value: 'Enabled',
+            tone: 'positive',
+            hint: 'Strike-level readout',
+          },
         ]}
       />
 
@@ -86,7 +96,7 @@ export default function PageLive0DTE() {
             <SelectionPanel
               items={[
                 { label: 'Underlying', value: uTicker },
-                { label: 'Date', value: defaultDate },
+                { label: 'Date', value: displayDate },
                 { label: 'Mode', value: '0DTE live monitoring' },
                 { label: 'Supporting lenses', value: 'Gamma / Vanna / Delta' },
               ]}

@@ -6,6 +6,12 @@ This document tracks all tasks performed on the alphaseekers3 Next.js frontend. 
 
 ## Task History
 
+### 2026-08-31
+
+| Date | Time | Task | Status | Branch | Notes |
+|------|------|------|--------|--------|-------|
+| 2026-08-31 | - | Fix /live0dte permanent spinners, wasted weekend fetches, UTC date bugs | Complete | `fix/live0dte-loading` | Charts had no SWR error branch (any failure = infinite spinner — the dominant "stuck loading" cause; on weekends every chart's full-day Friday query was killed by Gunicorn's 30s worker timeout → 502 → spinner forever). Page seeded UTC "today" so all 5 charts double-fetched (empty date on weekends); `fetch-custom-save.ts` could resolve `undefined` silently (spinner with no retry) and had unguarded `.data.data[0]`; date/session logic used UTC (wrong after 8pm ET, DST drift). Added `components/ChartStates.tsx` (`ChartLoadError` with Retry, `ChartEmptyState`) used by all 5 panels + both selectors; `lib/marketTime.ts` (ET `etToday`/`isMarketHoursET`/`liveRefreshInterval` via moment-timezone); `defaultDate` starts `null` and charts pass a null SWR key until SelectUDate resolves the real latest date (zero wasted fetches); `keepPreviousData: true` keeps charts rendered across date/ticker switches; `fetch-custom-save.ts` got null-key support, terminal throws instead of resolving `undefined`, and guarded count/lastEntry reads; `selectDate.tsx` no longer crashes on an empty date list and no longer mutates the SWR-cached array. Verified: typecheck error count unchanged at 334 (all pre-existing), prettier clean on touched files, `npm run build` ✓ (prod env). Server-side root cause (never-analyzed daily TimescaleDB chunks → catastrophic query plans) tracked in parent repo task log. |
+
 ### 2026-05-29
 
 | Date | Time | Task | Status | Branch | Notes |

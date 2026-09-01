@@ -57,12 +57,13 @@ const axiosFetchSave = async (
         headers,
         ...options,
       });
-      const serverDataLength = responseServerDataLength.data.data[0]['count'];
+      // -1 never matches count, forcing the safe refetch path on unexpected shapes
+      const serverDataLength = responseServerDataLength.data?.data?.[0]?.count ?? -1;
 
       const lastEntry = await volumeTable.orderBy('saved_datetime_ms').last();
       const und_symbol = params['und_symbol'];
 
-      if (lastEntry['uticker'] === und_symbol && count === serverDataLength) {
+      if (lastEntry?.['uticker'] === und_symbol && count === serverDataLength) {
         if (process.env.NODE_ENV === 'development') console.log('Uticker and Data Length Matches');
         const allData = await volumeTable.toArray();
         return { data: allData };
@@ -76,11 +77,13 @@ const axiosFetchSave = async (
           ...options,
         });
 
-        if (updatedData.data.data) {
+        if (updatedData.data?.data) {
           await volumeTable.bulkPut(updatedData.data.data);
           const allData = await volumeTable.toArray();
           return { data: allData };
         }
+        // Resolving undefined would leave SWR with no data and no error — a permanent spinner.
+        throw new Error('Unexpected response shape from server');
       }
     } else {
       if (process.env.NODE_ENV === 'development')
@@ -93,10 +96,11 @@ const axiosFetchSave = async (
         ...options,
       });
 
-      if (freshData.data.data) {
+      if (freshData.data?.data) {
         await volumeTable.bulkPut(freshData.data.data);
         return freshData.data;
       }
+      throw new Error('Unexpected response shape from server');
     }
   } catch (error: any) {
     // On 401/403: retry the entire function once with a force-refreshed token
@@ -112,10 +116,10 @@ const axiosFetchSave = async (
   }
 };
 
-function useCustomSWRLocalStorage(url: string, params = {}, swrOptions = {}) {
+function useCustomSWRLocalStorage(url: string | null, params = {}, swrOptions = {}) {
   const { data, error, isLoading, ...rest } = useSWR(
-    [url, params],
-    () => axiosFetchSave(url, params, swrOptions),
+    url ? [url, params] : null,
+    ([requestUrl, requestParams]) => axiosFetchSave(requestUrl, requestParams, swrOptions),
     swrOptions
   );
 

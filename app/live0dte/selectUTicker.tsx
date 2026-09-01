@@ -3,6 +3,7 @@ import useCustomSWR from '@/lib/fetchdata/fetch-custom';
 import MainLoading from '../loading';
 
 import SelectWrapper from '@/components/SelectWrapper';
+import { ChartLoadError } from '@/components/ChartStates';
 import { uTickerType } from './types';
 
 type SelectUtickerProps = {
@@ -12,7 +13,11 @@ type SelectUtickerProps = {
 };
 
 export function SelectUticker({ uTicker, setUTicker, size }: SelectUtickerProps) {
-  const { data: uTickerList, isLoading } = useCustomSWR(LIVE_OTM_UTICKERS);
+  const { data: uTickerList, isLoading, isError, mutate } = useCustomSWR(LIVE_OTM_UTICKERS);
+
+  if (isError) {
+    return <ChartLoadError message="Failed to load tickers." onRetry={() => mutate()} />;
+  }
 
   if (!uTickerList || isLoading) {
     return <MainLoading />;

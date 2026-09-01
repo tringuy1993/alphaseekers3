@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { EChartThemed } from '../EChartThemed';
 import useCustomSWR from '@/lib/fetchdata/fetch-custom';
 
 import MainLoading from '@/app/loading';
 import { LIVE_EXPO_GREEK_URL } from '@/lib/fetchdata/apiURLs';
 import { EChart0DTE_ExpoGreek_Opts } from './EChart0DTE_ExpoGreek_Opts';
+import { ChartEmptyState, ChartLoadError } from '@/components/ChartStates';
+import { liveRefreshInterval } from '@/lib/marketTime';
 
 const EChart0DTE_ExpoGreek = ({ params }) => {
-  const [refreshInterval, setRefreshInterval] = useState<number>();
-
-  useEffect(() => {
-    //Update Refresh Interval based on the date selected.
-    const today = new Date().toISOString().slice(0, 10);
-    if (params.date === today) {
-      setRefreshInterval(60000);
-    } else {
-      setRefreshInterval(0);
-    }
-  }, [params]);
-
-  const { data, isLoading } = useCustomSWR(LIVE_EXPO_GREEK_URL, params, {
-    refreshInterval,
+  // Null key until the date is resolved — no fetch for a non-existent session
+  const { data, isError, mutate } = useCustomSWR(params.date ? LIVE_EXPO_GREEK_URL : null, params, {
+    refreshInterval: liveRefreshInterval(params.date),
+    keepPreviousData: true,
   });
 
-  if (!data || isLoading) {
+  if (isError) {
+    return <ChartLoadError onRetry={() => mutate()} />;
+  }
+
+  if (!data) {
     return <MainLoading />;
+  }
+
+  if (!data.data?.length) {
+    return <ChartEmptyState />;
   }
 
   const ecOptions = EChart0DTE_ExpoGreek_Opts(data.data, params.greek);

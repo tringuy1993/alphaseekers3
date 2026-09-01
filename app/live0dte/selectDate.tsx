@@ -4,6 +4,8 @@ import { LIVE_OTM_DATES } from '@/lib/fetchdata/apiURLs';
 import useCustomSWR from '@/lib/fetchdata/fetch-custom';
 import MainLoading from '../loading';
 import SelectWrapper from '@/components/SelectWrapper';
+import { ChartEmptyState, ChartLoadError } from '@/components/ChartStates';
+import { etToday, isAfterMarketOpenET } from '@/lib/marketTime';
 import { uDateType } from './types';
 
 type SelectUDateProps = {
@@ -14,8 +16,13 @@ type SelectUDateProps = {
 
 export function SelectUDate({ uTicker, onDefaultDateChange, size }: SelectUDateProps) {
   const [selectedDate, setSelectedDate] = useState('');
-// ... rest of component ...
-  const { data: uDateData, isLoading } = useCustomSWR(LIVE_OTM_DATES, {
+  // ... rest of component ...
+  const {
+    data: uDateData,
+    isLoading,
+    isError,
+    mutate,
+  } = useCustomSWR(LIVE_OTM_DATES, {
     und_symbol: uTicker,
   });
 
@@ -26,8 +33,8 @@ export function SelectUDate({ uTicker, onDefaultDateChange, size }: SelectUDateP
 
   // Set the initial default date and update on data change
   useEffect(() => {
-    if (uDateData?.data) {
-      const initialDate = isLatestDateEqualToToday(uDateData.data).date;
+    if (uDateData?.data?.length) {
+      const initialDate = resolveInitialDate(uDateData.data).date;
       setSelectedDate(initialDate);
       onDefaultDateChange(initialDate);
     }
@@ -39,8 +46,16 @@ export function SelectUDate({ uTicker, onDefaultDateChange, size }: SelectUDateP
     onDefaultDateChange(selectedOption);
   };
 
+  if (isError) {
+    return <ChartLoadError message="Failed to load dates." onRetry={() => mutate()} />;
+  }
+
   if (isLoading) {
     return <MainLoading />;
+  }
+
+  if (!uDateData?.data?.length) {
+    return <ChartEmptyState message="No dates available." />;
   }
 
   return (
@@ -59,26 +74,18 @@ export function SelectUDate({ uTicker, onDefaultDateChange, size }: SelectUDateP
   );
 }
 
-function isLatestDateEqualToToday(dateList: uDateType[]) {
-  // Sort the list by date in descending order
-  dateList.sort(
+function resolveInitialDate(dateList: uDateType[]) {
+  // Sort a copy by date descending — don't mutate the SWR-cached array
+  const sorted = [...dateList].sort(
     (a: uDateType, b: uDateType) =>
       new Date(b.saved_date).getTime() - new Date(a.saved_date).getTime()
   );
 
-  // Get the latest date
-  const latestDate = dateList[0].saved_date;
+  const latestDate = sorted[0].saved_date;
 
-  // Get today's date formatted as YYYY-MM-DD
-  const today = new Date().toISOString().slice(0, 10);
-
-  const now = new Date();
-  const isAfterTwoThirty =
-    now.getUTCHours() > 14 || (now.getUTCHours() === 14 && now.getUTCMinutes() > 30);
-
-  // Compare and return the appropriate date
-  if (latestDate === today && isAfterTwoThirty) {
-    return { is0DTE: true, date: today };
+  // Today's session (ET) only counts as live once the market has opened
+  if (latestDate === etToday() && isAfterMarketOpenET()) {
+    return { is0DTE: true, date: latestDate };
   }
 
   return { is0DTE: false, date: latestDate };
